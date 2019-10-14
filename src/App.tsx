@@ -19,9 +19,10 @@ export default class App extends React.Component {
       {
         id: 3,
         text: 'Learn',
-        completed: false
+        completed: true
       }
-    ]
+    ],
+    todoToShow: 'all'
   };
 
   addTodo = (todo: Todo): void => {
@@ -45,7 +46,23 @@ export default class App extends React.Component {
     });
   };
 
+  updateTodoToShow = (s: string): void => {
+    this.setState({
+      todoToShow: s
+    });
+  };
+
   render() {
+    let todos = [];
+
+    if (this.state.todoToShow === 'all') {
+      todos = this.state.todos;
+    } else if (this.state.todoToShow === 'active') {
+      todos = this.state.todos.filter(todo => !todo.completed);
+    } else if (this.state.todoToShow === 'completed') {
+      todos = this.state.todos.filter(todo => todo.completed);
+    }
+
     return (
       <div>
         <TodoHeader onSubmit={this.addTodo} />
@@ -60,6 +77,15 @@ export default class App extends React.Component {
         </ul>
         <div>
           Todos left: {this.state.todos.filter(todo => !todo.completed).length}
+        </div>
+        <div>
+          <button onClick={() => this.updateTodoToShow('all')}>All</button>
+          <button onClick={() => this.updateTodoToShow('active')}>
+            Active
+          </button>
+          <button onClick={() => this.updateTodoToShow('completed')}>
+            Completed
+          </button>
         </div>
       </div>
     );
