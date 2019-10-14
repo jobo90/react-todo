@@ -1,26 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { TodoListItem } from './components/TodoListItem';
+import TodoHeader from './components/TodoHeader';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// const todos: Array<Todo> = [
+//   {
+//     id: 1,
+//     text: 'Shut up',
+//     completed: true
+//   },
+//   {
+//     id: 2,
+//     text: 'Learn React',
+//     completed: false
+//   }
+// ];
+
+export default class App extends React.Component {
+  state = {
+    todos: [
+      {
+        id: 1,
+        text: 'Shut up',
+        completed: true
+      }
+    ]
+  };
+
+  addTodo = (todo: Todo): void => {
+    this.setState({
+      todos: [todo, ...this.state.todos]
+    });
+  };
+
+  render() {
+    return (
+      <div>
+        <TodoHeader onSubmit={this.addTodo} />
+        {this.state.todos && this.state.todos.map(todo => (
+          <div key={todo.id}>{todo.text}</div>
+        ))}
+        {/* <TodoListItem todo={todos[0]} />
+        <TodoListItem todo={todos[1]} /> */}
+      </div>
+    );
+  }
 }
-
-export default App;
