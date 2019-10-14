@@ -52,6 +52,12 @@ export default class App extends React.Component {
     });
   };
 
+  handleDeleteTodo = (id: number): void => {
+    this.setState({
+      todos: this.state.todos.filter(todo => todo.id !== id)
+    });
+  };
+
   render() {
     let todos: Array<Todo> = [];
 
@@ -71,6 +77,7 @@ export default class App extends React.Component {
             <TodoItem
               todo={todo}
               toggleComplete={() => this.toggleComplete(todo.id)}
+              onDelete={() => this.handleDeleteTodo(todo.id)}
             />
           ))}
         </ul>
@@ -91,4 +98,4 @@ export default class App extends React.Component {
   }
 }
 
-// 24:11
+// 27:33

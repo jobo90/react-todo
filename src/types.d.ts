@@ -13,15 +13,16 @@ interface TodoHeaderProps {
 }
 
 interface AppState {
-  todos: Array<Todo>,
-  todosToShow: string
+  todos: Array<Todo>;
+  todosToShow: string;
 }
 
 interface TodoItemProps {
   todo: {
-    id: number,
-    text: string,
-    completed: boolean
-  }
-  toggleComplete(event: MouseEvent<HTMLLIElement, MouseEvent>): void
+    id: number;
+    text: string;
+    completed: boolean;
+  };
+  toggleComplete(event: MouseEvent<HTMLLIElement, MouseEvent>): void;
+  onDelete(event: MouseEvent<HTMLLIElement, MouseEvent>): void;
 }
