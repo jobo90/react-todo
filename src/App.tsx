@@ -9,7 +9,17 @@ export default class App extends React.Component {
       {
         id: 1,
         text: 'Shut up',
-        completed: true
+        completed: false
+      },
+      {
+        id: 2,
+        text: 'Eat',
+        completed: false
+      },
+      {
+        id: 3,
+        text: 'Learn',
+        completed: false
       }
     ]
   };
@@ -39,14 +49,18 @@ export default class App extends React.Component {
     return (
       <div>
         <TodoHeader onSubmit={this.addTodo} />
-        {this.state.todos &&
-          this.state.todos.map(todo => (
-            <TodoItem
-              id={todo.id}
-              todo={todo}
-              toggleComplete={() => this.toggleComplete(todo.id)}
-            />
-          ))}
+        <ul>
+          {this.state.todos &&
+            this.state.todos.map(todo => (
+              <TodoItem
+                todo={todo}
+                toggleComplete={() => this.toggleComplete(todo.id)}
+              />
+            ))}
+        </ul>
+        <div>
+          Todos left: {this.state.todos.filter(todo => !todo.completed).length}
+        </div>
       </div>
     );
   }

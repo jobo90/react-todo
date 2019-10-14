@@ -22,5 +22,5 @@ interface TodoItemProps {
     text: string,
     completed: boolean
   }
-  toggleComplete(id: number): void
+  toggleComplete(event: MouseEvent<HTMLLIElement, MouseEvent>): void
 }
