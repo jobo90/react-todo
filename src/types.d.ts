@@ -15,3 +15,12 @@ interface TodoHeaderProps {
 interface AppState {
   todos: Array<Todo>
 }
+
+interface TodoItemProps {
+  todo: {
+    id: number,
+    text: string,
+    completed: boolean
+  }
+  toggleComplete(id: number): void
+}
