@@ -13,7 +13,8 @@ interface TodoHeaderProps {
 }
 
 interface AppState {
-  todos: Array<Todo>
+  todos: Array<Todo>,
+  todosToShow: string
 }
 
 interface TodoItemProps {

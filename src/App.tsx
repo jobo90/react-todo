@@ -22,7 +22,7 @@ export default class App extends React.Component {
         completed: true
       }
     ],
-    todoToShow: 'all'
+    todosToShow: 'all'
   };
 
   addTodo = (todo: Todo): void => {
@@ -48,18 +48,18 @@ export default class App extends React.Component {
 
   updateTodoToShow = (s: string): void => {
     this.setState({
-      todoToShow: s
+      todosToShow: s
     });
   };
 
   render() {
-    let todos = [];
+    let todos: Array<Todo> = [];
 
-    if (this.state.todoToShow === 'all') {
+    if (this.state.todosToShow === 'all') {
       todos = this.state.todos;
-    } else if (this.state.todoToShow === 'active') {
+    } else if (this.state.todosToShow === 'active') {
       todos = this.state.todos.filter(todo => !todo.completed);
-    } else if (this.state.todoToShow === 'completed') {
+    } else if (this.state.todosToShow === 'completed') {
       todos = this.state.todos.filter(todo => todo.completed);
     }
 
@@ -67,13 +67,12 @@ export default class App extends React.Component {
       <div>
         <TodoHeader onSubmit={this.addTodo} />
         <ul>
-          {this.state.todos &&
-            this.state.todos.map(todo => (
-              <TodoItem
-                todo={todo}
-                toggleComplete={() => this.toggleComplete(todo.id)}
-              />
-            ))}
+          {todos.map(todo => (
+            <TodoItem
+              todo={todo}
+              toggleComplete={() => this.toggleComplete(todo.id)}
+            />
+          ))}
         </ul>
         <div>
           Todos left: {this.state.todos.filter(todo => !todo.completed).length}
@@ -91,3 +90,5 @@ export default class App extends React.Component {
     );
   }
 }
+
+// 24:11
