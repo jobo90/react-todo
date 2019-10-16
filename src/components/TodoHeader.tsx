@@ -1,5 +1,15 @@
 import React from 'react';
 
+import { Todo } from './types';
+
+interface TodoHeaderState {
+  text: string;
+}
+
+interface TodoHeaderProps {
+  onSubmit(todo: Todo): void;
+}
+
 export default class TodoHeader extends React.Component<
   TodoHeaderProps,
   TodoHeaderState
@@ -7,30 +17,31 @@ export default class TodoHeader extends React.Component<
   constructor(props: TodoHeaderProps) {
     super(props);
     this.state = {
-      text: ''
+      text: '',
     };
   }
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+  public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      text: e.target.value
+      text: e.target.value,
     });
   };
 
-  handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
+  public handleSubmit = (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
+  ) => {
     e.preventDefault();
     this.props.onSubmit({
       id: Date.now(),
       text: this.state.text,
-      completed: false
+      completed: false,
     });
     this.setState({
-      text: ''
+      text: '',
     });
   };
 
-  render() {
+  public render() {
     return (
       <form onSubmit={this.handleSubmit}>
         <input

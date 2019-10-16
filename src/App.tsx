@@ -1,64 +1,83 @@
 import React from 'react';
-import './App.css';
+
 import { TodoItem } from './components/TodoItem';
 import TodoHeader from './components/TodoHeader';
+import { Todo } from './components/types';
+
+import './App.css';
+
+// interface AppState {
+//   todos: Array<Todo>;
+//   todosToShow: string;
+// }
 
 export default class App extends React.Component {
-  state = {
+  public state = {
     todos: [
       {
         id: 1,
-        text: 'Shut up',
-        completed: false
+        text: 'Drink',
+        completed: false,
       },
       {
         id: 2,
         text: 'Eat',
-        completed: false
+        completed: false,
       },
       {
         id: 3,
         text: 'Learn',
-        completed: true
-      }
+        completed: true,
+      },
     ],
-    todosToShow: 'all'
+    todosToShow: 'all',
   };
 
-  addTodo = (todo: Todo): void => {
+  public addTodo = (todo: Todo) => {
     this.setState({
-      todos: [todo, ...this.state.todos]
+      todos: [todo, ...this.state.todos],
     });
   };
 
-  toggleComplete = (id: number): void => {
+  public toggleComplete = (id: number) => {
     this.setState({
       todos: this.state.todos.map(todo => {
         if (todo.id === id) {
           return {
             ...todo,
-            completed: !todo.completed
+            completed: !todo.completed,
           };
         } else {
           return todo;
         }
-      })
+      }),
     });
   };
 
-  updateTodoToShow = (s: string): void => {
+  public updateTodoToShow = (s: string) => {
     this.setState({
-      todosToShow: s
+      todosToShow: s,
     });
   };
 
-  handleDeleteTodo = (id: number): void => {
+  public handleDeleteTodo = (id: number) => {
     this.setState({
-      todos: this.state.todos.filter(todo => todo.id !== id)
+      todos: this.state.todos.filter(todo => todo.id !== id),
     });
   };
 
-  render() {
+  private renderTodoItems = (todo: Todo) => {
+    return (
+      <TodoItem
+        todo={todo}
+        onToggleComplete={this.toggleComplete}
+        onDelete={() => this.handleDeleteTodo(todo.id)}
+        key={todo.id}
+      />
+    );
+  };
+
+  public render() {
     let todos: Array<Todo> = [];
 
     if (this.state.todosToShow === 'all') {
@@ -72,15 +91,7 @@ export default class App extends React.Component {
     return (
       <div>
         <TodoHeader onSubmit={this.addTodo} />
-        <ul>
-          {todos.map(todo => (
-            <TodoItem
-              todo={todo}
-              toggleComplete={() => this.toggleComplete(todo.id)}
-              onDelete={() => this.handleDeleteTodo(todo.id)}
-            />
-          ))}
-        </ul>
+        <ul>{todos.map(this.renderTodoItems)}</ul>
         <div>
           Todos left: {this.state.todos.filter(todo => !todo.completed).length}
         </div>
@@ -97,5 +108,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-// 27:33
