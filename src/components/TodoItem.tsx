@@ -6,8 +6,9 @@ import './TodoItem.css';
 
 export interface TodoItemProps {
   todo: Todo;
-  onToggleComplete: (id: string) => void;
+  onToggleComplete: (todo: Todo) => void;
   onDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+  isLoading: boolean;
 }
 
 interface TodoItemState {
@@ -19,7 +20,7 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   constructor(props: TodoItemProps) {
     super(props);
     this.state = {
-      todoText: props.todo.text,
+      todoText: props.todo.title,
       editing: false,
     };
   }
@@ -54,7 +55,7 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   };
 
   public handleComplete = () => {
-    this.props.onToggleComplete(this.props.todo.id);
+    this.props.onToggleComplete(this.props.todo);
   };
 
   // handleKeyDown(e) {}
@@ -80,12 +81,12 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
           />
         </li>
         {this.state.editing ? null : (
-          <button onClick={this.handleComplete}>Complete</button>
+          <button onClick={this.handleComplete} disabled={this.props.isLoading}>Complete</button>
         )}
-        <button onClick={this.handleEdit}>
+        <button onClick={this.handleEdit} disabled={this.props.isLoading}>
           {this.state.editing ? 'Save' : 'Edit'}
         </button>
-        <button onClick={this.props.onDelete}>Delete</button>
+        <button onClick={this.props.onDelete} disabled={this.props.isLoading}>Delete</button>
       </div>
     );
   }

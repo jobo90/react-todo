@@ -3,7 +3,7 @@ import React from 'react';
 import { Todo } from './types';
 
 interface TodoHeaderState {
-  text: string;
+  title: string;
 }
 
 interface TodoHeaderProps {
@@ -17,13 +17,13 @@ export default class TodoHeader extends React.Component<
   constructor(props: TodoHeaderProps) {
     super(props);
     this.state = {
-      text: '',
+      title: '',
     };
   }
 
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      text: e.target.value,
+      title: e.target.value,
     });
   };
 
@@ -33,11 +33,11 @@ export default class TodoHeader extends React.Component<
     e.preventDefault();
     this.props.onSubmit({
       id: Date.now().toString(),
-      text: this.state.text,
+      title: this.state.title,
       completed: false,
     });
     this.setState({
-      text: '',
+      title: '',
     });
   };
 
@@ -45,8 +45,8 @@ export default class TodoHeader extends React.Component<
     return (
       <form onSubmit={this.handleSubmit}>
         <input
-          name="text"
-          value={this.state.text}
+          name="title"
+          value={this.state.title}
           onChange={this.handleChange}
           placeholder="Add todo..."
         />

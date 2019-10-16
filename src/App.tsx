@@ -6,49 +6,94 @@ import { Todo } from './components/types';
 
 import './App.css';
 
-// interface AppState {
-//   todos: Array<Todo>;
-//   todosToShow: string;
-// }
+export interface AppProps {}
 
-export default class App extends React.Component {
+interface AppState {
+  todos: Array<Todo>;
+  todosToShow: string;
+  isLoading: boolean;
+}
+
+export default class App extends React.Component<AppProps, AppState> {
   public state = {
     todos: [
       {
-        id: '1',
-        text: 'Drink',
+        id: '5',
+        title: 'Drink',
         completed: false,
       },
       {
-        id: '2',
-        text: 'Eat',
+        id: '6',
+        title: 'Eat',
         completed: false,
       },
       {
-        id: '3',
-        text: 'Learn',
+        id: '7',
+        title: 'Learn',
         completed: true,
       },
     ],
     todosToShow: 'all',
+    isLoading: false,
   };
+
+  public componentDidMount() {
+    this.setState({
+      isLoading: true,
+    });
+
+    fetch('https://my-json-server.typicode.com/jobo90/restapi2/todos')
+      .then(response => response.json())
+      .then(data =>
+        this.setState({
+          todos: [...data, ...this.state.todos],
+          isLoading: false,
+        }),
+      );
+  }
 
   public addTodo = (todo: Todo) => {
-    this.setState({
-      todos: [todo, ...this.state.todos],
-    });
+    fetch('https://my-json-server.typicode.com/jobo90/restapi2/todos', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: todo.id,
+        title: todo.title,
+        completed: todo.completed,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(json =>
+        this.setState({
+          todos: [json, ...this.state.todos],
+        }),
+      );
   };
 
-  public toggleComplete = (id: string) => {
+  public toggleComplete = (todo: Todo) => {
+    fetch(`https://my-json-server.typicode.com/jobo90/restapi2/todos/${todo.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        completed: !todo.completed
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(json => console.log(json));
+
     this.setState({
-      todos: this.state.todos.map(todo => {
-        if (todo.id === id) {
+      todos: this.state.todos.map(todoItem => {
+        if (todoItem.id === todo.id) {
           return {
-            ...todo,
+            ...todoItem,
             completed: !todo.completed,
           };
         } else {
-          return todo;
+          return todoItem;
         }
       }),
     });
@@ -61,9 +106,13 @@ export default class App extends React.Component {
   };
 
   public handleDeleteTodo = (id: string) => {
-    this.setState({
-      todos: this.state.todos.filter(todo => todo.id !== id),
-    });
+    fetch(`https://my-json-server.typicode.com/jobo90/restapi2/todos/${id}`, {
+      method: 'DELETE',
+    }).then(response => console.log(response));
+
+    // this.setState({
+    //   todos: this.state.todos.filter(todo => todo.id !== id),
+    // });
   };
 
   private renderTodoItems = (todo: Todo) => {
@@ -73,6 +122,7 @@ export default class App extends React.Component {
         onToggleComplete={this.toggleComplete}
         onDelete={() => this.handleDeleteTodo(todo.id)}
         key={todo.id}
+        isLoading={this.state.isLoading}
       />
     );
   };
@@ -95,10 +145,9 @@ export default class App extends React.Component {
     return (
       <div>
         <TodoHeader onSubmit={this.addTodo} />
+        {this.state.isLoading ? <p>Loading...</p> : null}
         <ul>{todos.map(this.renderTodoItems)}</ul>
-        <div>
-          Todos left: {this.showTodosLeft()}
-        </div>
+        <div>Todos left: {this.showTodosLeft()}</div>
         <div>
           <button onClick={() => this.filterTodos('all')}>All</button>
           <button onClick={() => this.filterTodos('active')}>Active</button>
