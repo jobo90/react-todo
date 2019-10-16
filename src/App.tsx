@@ -54,9 +54,9 @@ export default class App extends React.Component {
     });
   };
 
-  public updateTodoToShow = (s: string) => {
+  public filterTodos = (filter: string) => {
     this.setState({
-      todosToShow: s,
+      todosToShow: filter,
     });
   };
 
@@ -77,6 +77,10 @@ export default class App extends React.Component {
     );
   };
 
+  private showTodosLeft = () => {
+    return this.state.todos.filter(todo => !todo.completed).length;
+  };
+
   public render() {
     let todos: Array<Todo> = [];
 
@@ -93,14 +97,12 @@ export default class App extends React.Component {
         <TodoHeader onSubmit={this.addTodo} />
         <ul>{todos.map(this.renderTodoItems)}</ul>
         <div>
-          Todos left: {this.state.todos.filter(todo => !todo.completed).length}
+          Todos left: {this.showTodosLeft()}
         </div>
         <div>
-          <button onClick={() => this.updateTodoToShow('all')}>All</button>
-          <button onClick={() => this.updateTodoToShow('active')}>
-            Active
-          </button>
-          <button onClick={() => this.updateTodoToShow('completed')}>
+          <button onClick={() => this.filterTodos('all')}>All</button>
+          <button onClick={() => this.filterTodos('active')}>Active</button>
+          <button onClick={() => this.filterTodos('completed')}>
             Completed
           </button>
         </div>
