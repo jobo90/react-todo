@@ -15,17 +15,17 @@ export default class App extends React.Component {
   public state = {
     todos: [
       {
-        id: 1,
+        id: '1',
         text: 'Drink',
         completed: false,
       },
       {
-        id: 2,
+        id: '2',
         text: 'Eat',
         completed: false,
       },
       {
-        id: 3,
+        id: '3',
         text: 'Learn',
         completed: true,
       },
@@ -39,7 +39,7 @@ export default class App extends React.Component {
     });
   };
 
-  public toggleComplete = (id: number) => {
+  public toggleComplete = (id: string) => {
     this.setState({
       todos: this.state.todos.map(todo => {
         if (todo.id === id) {
@@ -60,7 +60,7 @@ export default class App extends React.Component {
     });
   };
 
-  public handleDeleteTodo = (id: number) => {
+  public handleDeleteTodo = (id: string) => {
     this.setState({
       todos: this.state.todos.filter(todo => todo.id !== id),
     });

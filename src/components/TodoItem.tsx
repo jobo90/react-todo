@@ -6,7 +6,7 @@ import './TodoItem.css';
 
 export interface TodoItemProps {
   todo: Todo;
-  onToggleComplete: (id: number) => void;
+  onToggleComplete: (id: string) => void;
   onDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 }
 

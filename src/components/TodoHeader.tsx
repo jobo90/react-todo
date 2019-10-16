@@ -32,7 +32,7 @@ export default class TodoHeader extends React.Component<
   ) => {
     e.preventDefault();
     this.props.onSubmit({
-      id: Date.now(),
+      id: Date.now().toString(),
       text: this.state.text,
       completed: false,
     });
