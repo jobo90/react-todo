@@ -37,66 +37,98 @@ export default class App extends React.Component<AppProps, AppState> {
     isLoading: false,
   };
 
-  public componentDidMount() {
+  public async componentDidMount() {
     this.setState({
       isLoading: true,
     });
 
-    fetch('https://my-json-server.typicode.com/jobo90/restapi2/todos')
-      .then(response => response.json())
-      .then(data =>
-        this.setState({
-          todos: [...data, ...this.state.todos],
-          isLoading: false,
-        }),
+    try {
+      const response = await fetch(
+        'https://my-json-server.typicode.com/jobo90/restapi2/todos',
       );
+
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
+      const json = await response.json();
+
+      this.setState({
+        todos: [...json, ...this.state.todos],
+        isLoading: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  public addTodo = (todo: Todo) => {
-    fetch('https://my-json-server.typicode.com/jobo90/restapi2/todos', {
-      method: 'POST',
-      body: JSON.stringify({
-        id: todo.id,
-        title: todo.title,
-        completed: todo.completed,
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then(response => response.json())
-      .then(json =>
-        this.setState({
-          todos: [json, ...this.state.todos],
-        }),
+  public addTodo = async (todo: Todo) => {
+    try {
+      const response = await fetch(
+        'https://my-json-server.typicode.com/jobo90/restapi2/todos',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            id: todo.id,
+            title: todo.title,
+            completed: todo.completed,
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        },
       );
+
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
+      const json = await response.json();
+
+      this.setState({
+        todos: [json, ...this.state.todos],
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  public toggleComplete = (todo: Todo) => {
-    fetch(`https://my-json-server.typicode.com/jobo90/restapi2/todos/${todo.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        completed: !todo.completed
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then(response => response.json())
-      .then(json => console.log(json));
-
-    this.setState({
-      todos: this.state.todos.map(todoItem => {
-        if (todoItem.id === todo.id) {
-          return {
-            ...todoItem,
+  public toggleComplete = async (todo: Todo) => {
+    try {
+      const response = await fetch(
+        `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todo.id}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify({
             completed: !todo.completed,
-          };
-        } else {
-          return todoItem;
-        }
-      }),
-    });
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
+      const json = await response.json();
+
+      this.setState({
+        todos: this.state.todos.map(todoItem => {
+          if (todoItem.id === json.id) {
+            return {
+              ...todoItem,
+              completed: !todoItem.completed,
+            };
+          } else {
+            return todoItem;
+          }
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   public filterTodos = (filter: string) => {
@@ -105,14 +137,25 @@ export default class App extends React.Component<AppProps, AppState> {
     });
   };
 
-  public handleDeleteTodo = (id: string) => {
-    fetch(`https://my-json-server.typicode.com/jobo90/restapi2/todos/${id}`, {
-      method: 'DELETE',
-    }).then(response => console.log(response));
+  public handleDeleteTodo = async (id: string) => {
+    try {
+      const response = await fetch(
+        `https://my-json-server.typicode.com/jobo90/restapi2/todos/${id}`,
+        {
+          method: 'DELETE',
+        },
+      );
 
-    // this.setState({
-    //   todos: this.state.todos.filter(todo => todo.id !== id),
-    // });
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
+      this.setState({
+        todos: this.state.todos.filter(todo => todo.id !== id),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   private renderTodoItems = (todo: Todo) => {
