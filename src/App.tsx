@@ -64,7 +64,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
   public addTodo = async (todo: Todo) => {
     try {
-      const response = await fetch(
+      const response: Response = await fetch(
         'https://my-json-server.typicode.com/jobo90/restapi2/todos',
         {
           method: 'POST',

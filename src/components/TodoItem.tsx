@@ -38,7 +38,7 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   };
 
   public handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    let val = this.state.todoText.trim();
+    let val: string = this.state.todoText.trim();
 
     if (e.key === 'Enter' || e.key === 'Escape') {
       if (val) {
@@ -57,8 +57,6 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   public handleComplete = () => {
     this.props.onToggleComplete(this.props.todo);
   };
-
-  // handleKeyDown(e) {}
 
   public render() {
     return (
