@@ -29,7 +29,7 @@ export default class App extends React.Component<AppProps, AppState> {
     });
 
     try {
-      const response = await fetch(
+      const response: Response = await fetch(
         'https://my-json-server.typicode.com/jobo90/restapi2/todos',
       );
 
@@ -78,8 +78,7 @@ export default class App extends React.Component<AppProps, AppState> {
       }
 
       // Convert the response to json
-      const json = await response.json();
-
+      const json: Todo = await response.json();
       // Add the new todo item to the top of the todos in state and set isLoading to false to enable all buttons again
       this.setState({
         todos: [json, ...this.state.todos],
@@ -99,7 +98,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     // Sending PATCH request to server to change the completed status of the item
     try {
-      const response = await fetch(
+      const response: Response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todo.id}`,
         {
           method: 'PATCH',
@@ -148,7 +147,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     // Sending DELETE request to server to remove the selected todo item
     try {
-      const response = await fetch(
+      const response: Response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${id}`,
         {
           method: 'DELETE',

@@ -28,7 +28,7 @@ export default class TodoHeader extends React.Component<
     });
   };
 
-  /** Pass the new todo to the parent component */
+  /** Pass the new todo to the parent component  */
   public handleSubmit = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
@@ -47,12 +47,20 @@ export default class TodoHeader extends React.Component<
     return (
       <form onSubmit={this.handleSubmit}>
         <input
+          aria-label="Add todo"
           name="title"
           value={this.state.title}
           onChange={this.handleChange}
           placeholder="Add todo..."
         />
-        <button onClick={this.handleSubmit}>Add ToDo</button>
+        <button
+          type="submit"
+          name="addTodo"
+          value="Add ToDo"
+          onClick={this.handleSubmit}
+        >
+          Add ToDo
+        </button>
       </form>
     );
   }
