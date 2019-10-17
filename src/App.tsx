@@ -15,24 +15,8 @@ interface AppState {
 }
 
 export default class App extends React.Component<AppProps, AppState> {
-  public state = {
-    todos: [
-      {
-        id: '5',
-        title: 'Drink',
-        completed: false,
-      },
-      {
-        id: '6',
-        title: 'Eat',
-        completed: false,
-      },
-      {
-        id: '7',
-        title: 'Learn',
-        completed: true,
-      },
-    ],
+  public state: AppState = {
+    todos: [],
     todosToShow: 'all',
     isLoading: false,
   };
@@ -154,6 +138,42 @@ export default class App extends React.Component<AppProps, AppState> {
         todos: this.state.todos.filter(todo => todo.id !== id),
       });
     } catch (error) {
+      throw error;
+    }
+  };
+
+  public handleEditTodo = async (newTodoText: string, todoId: string) => {
+    try {
+      const response = await fetch(
+        `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todoId}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify({
+            title: newTodoText,
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
+      this.setState({
+        todos: this.state.todos.map(todoItem => {
+          if (todoItem.id === todoId) {
+            return {
+              ...todoItem,
+              title: newTodoText,
+            };
+          } else {
+            return todoItem;
+          }
+        }),
+      });
+    } catch (error) {
       console.log(error);
     }
   };
@@ -164,6 +184,7 @@ export default class App extends React.Component<AppProps, AppState> {
         todo={todo}
         onToggleComplete={this.toggleComplete}
         onDelete={() => this.handleDeleteTodo(todo.id)}
+        onEdit={this.handleEditTodo}
         key={todo.id}
         isLoading={this.state.isLoading}
       />

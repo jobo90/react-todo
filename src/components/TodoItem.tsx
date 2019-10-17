@@ -7,7 +7,8 @@ import './TodoItem.css';
 export interface TodoItemProps {
   todo: Todo;
   onToggleComplete: (todo: Todo) => void;
-  onDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+  onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onEdit: (val: string, todoId: string) => void;
   isLoading: boolean;
 }
 
@@ -39,13 +40,13 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
 
   public handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     let val: string = this.state.todoText.trim();
-
     if (e.key === 'Enter' || e.key === 'Escape') {
       if (val) {
         this.setState({
           todoText: val,
           editing: false,
         });
+        this.props.onEdit(this.state.todoText, this.props.todo.id);
       }
     }
   };
@@ -67,7 +68,6 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
         >
           <label className={this.state.editing ? 'hidden' : 'edit'}>
             {this.state.todoText}
-            {/* {this.props.todo.text} */}
           </label>
           <input
             autoFocus={this.state.editing ? true : false}
@@ -79,12 +79,16 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
           />
         </li>
         {this.state.editing ? null : (
-          <button onClick={this.handleComplete} disabled={this.props.isLoading}>Complete</button>
+          <button onClick={this.handleComplete} disabled={this.props.isLoading}>
+            Complete
+          </button>
         )}
         <button onClick={this.handleEdit} disabled={this.props.isLoading}>
           {this.state.editing ? 'Save' : 'Edit'}
         </button>
-        <button onClick={this.props.onDelete} disabled={this.props.isLoading}>Delete</button>
+        <button onClick={this.props.onDelete} disabled={this.props.isLoading}>
+          Delete
+        </button>
       </div>
     );
   }
