@@ -21,7 +21,9 @@ export default class App extends React.Component<AppProps, AppState> {
     isLoading: false,
   };
 
+  /** Fetching todos from API */
   public async componentDidMount() {
+    // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
     });
@@ -47,10 +49,12 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   public addTodo = async (todo: Todo) => {
+    // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
     });
 
+    // Sending POST request to server to add the todo item
     try {
       const response: Response = await fetch(
         'https://my-json-server.typicode.com/jobo90/restapi2/todos',
@@ -67,12 +71,15 @@ export default class App extends React.Component<AppProps, AppState> {
         },
       );
 
+      // Throw an error if response is not in range between 200-299
       if (!response.ok) {
         throw Error(response.statusText);
       }
 
+      // Convert the response to json
       const json = await response.json();
 
+      // Add the new todo item to the top of the todos in state and set isLoading to false to enable all buttons again
       this.setState({
         todos: [json, ...this.state.todos],
         isLoading: false,
@@ -83,10 +90,12 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   public toggleComplete = async (todo: Todo) => {
+    // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
     });
 
+    // Sending PATCH request to server to change the completed status of the item
     try {
       const response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todo.id}`,
@@ -101,12 +110,15 @@ export default class App extends React.Component<AppProps, AppState> {
         },
       );
 
+      // Throw an error if response is not in range between 200-299
       if (!response.ok) {
         throw Error(response.statusText);
       }
 
+      // Convert the response to json
       const json = await response.json();
 
+      // Map over the state and change the items completed state where the id matches, then set isLoading to false to enable all buttons again
       this.setState({
         todos: this.state.todos.map(todoItem => {
           if (todoItem.id === json.id) {
@@ -125,17 +137,13 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   };
 
-  public filterTodos = (filter: string) => {
-    this.setState({
-      todosToShow: filter,
-    });
-  };
-
   public handleDeleteTodo = async (id: string) => {
+    // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
     });
 
+    // Sending DELETE request to server to remove the selected todo item
     try {
       const response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${id}`,
@@ -144,10 +152,12 @@ export default class App extends React.Component<AppProps, AppState> {
         },
       );
 
+      // Throw an error if response is not in range between 200-299
       if (!response.ok) {
         throw Error(response.statusText);
       }
 
+      // Filter the todos in state to remove the selected todo item, then set isLoading to false to enable all buttons again
       this.setState({
         todos: this.state.todos.filter(todo => todo.id !== id),
         isLoading: false,
@@ -158,10 +168,12 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   public handleEditTodo = async (newTodoText: string, todoId: string) => {
+    // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
     });
 
+    // Sending PATCH request to server to change the title of the item
     try {
       const response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todoId}`,
@@ -176,10 +188,12 @@ export default class App extends React.Component<AppProps, AppState> {
         },
       );
 
+      // Throw an error if response is not in range between 200-299
       if (!response.ok) {
         throw Error(response.statusText);
       }
 
+      // Map over the state and change the items title where the id matches, then set isLoading to false to enable all buttons again
       this.setState({
         todos: this.state.todos.map(todoItem => {
           if (todoItem.id === todoId) {
@@ -196,8 +210,16 @@ export default class App extends React.Component<AppProps, AppState> {
     } catch (error) {
       throw error;
     }
+  };  
+
+  // Set the state to show the todos by filter (all, active, completed)
+  private filterTodos = (filter: string) => {
+    this.setState({
+      todosToShow: filter,
+    });
   };
 
+  // 
   private renderTodoItems = (todo: Todo) => {
     return (
       <TodoItem
@@ -211,13 +233,16 @@ export default class App extends React.Component<AppProps, AppState> {
     );
   };
 
+  // Show the number of todos that are not completed
   private showTodosLeft = () => {
     return this.state.todos.filter(todo => !todo.completed).length;
   };
 
   public render() {
+    // Create an empty array of todos
     let todos: Array<Todo> = [];
 
+    // Fill the empty array with filtered state
     if (this.state.todosToShow === 'all') {
       todos = this.state.todos;
     } else if (this.state.todosToShow === 'active') {
