@@ -21,12 +21,14 @@ export default class TodoHeader extends React.Component<
     };
   }
 
+  /** Changing the state on every key stroke */
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       title: e.target.value,
     });
   };
 
+  /** Pass the new todo to the parent component */
   public handleSubmit = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {

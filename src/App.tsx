@@ -48,6 +48,7 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   }
 
+  /** Adding a todo item to state and to server */
   public addTodo = async (todo: Todo) => {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
@@ -89,6 +90,7 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   };
 
+  /** Toggle a todo item complete in state and on server */
   public toggleComplete = async (todo: Todo) => {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
@@ -137,6 +139,7 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   };
 
+  /** Delete a todo item in state and on server */
   public handleDeleteTodo = async (id: string) => {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
@@ -167,6 +170,7 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   };
 
+  /** Edit a todo item in state and on server */
   public handleEditTodo = async (newTodoText: string, todoId: string) => {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
@@ -212,28 +216,28 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   };  
 
-  // Set the state to show the todos by filter (all, active, completed)
+  /** Set the state to show the todos by filter (all, active, completed) */
   private filterTodos = (filter: string) => {
     this.setState({
       todosToShow: filter,
     });
   };
 
-  // 
+  /**  */
   private renderTodoItems = (todo: Todo) => {
     return (
       <TodoItem
+        isLoading={this.state.isLoading}
+        key={todo.id}
         todo={todo}
-        onToggleComplete={this.toggleComplete}
         onDelete={() => this.handleDeleteTodo(todo.id)}
         onEdit={this.handleEditTodo}
-        key={todo.id}
-        isLoading={this.state.isLoading}
+        onToggleComplete={this.toggleComplete}
       />
     );
   };
 
-  // Show the number of todos that are not completed
+  /** Show the number of todos that are not completed */
   private showTodosLeft = () => {
     return this.state.todos.filter(todo => !todo.completed).length;
   };
