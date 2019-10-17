@@ -47,6 +47,10 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   public addTodo = async (todo: Todo) => {
+    this.setState({
+      isLoading: true,
+    });
+
     try {
       const response: Response = await fetch(
         'https://my-json-server.typicode.com/jobo90/restapi2/todos',
@@ -71,13 +75,18 @@ export default class App extends React.Component<AppProps, AppState> {
 
       this.setState({
         todos: [json, ...this.state.todos],
+        isLoading: false,
       });
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
   public toggleComplete = async (todo: Todo) => {
+    this.setState({
+      isLoading: true,
+    });
+
     try {
       const response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todo.id}`,
@@ -109,9 +118,10 @@ export default class App extends React.Component<AppProps, AppState> {
             return todoItem;
           }
         }),
+        isLoading: false,
       });
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
@@ -122,6 +132,10 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   public handleDeleteTodo = async (id: string) => {
+    this.setState({
+      isLoading: true,
+    });
+
     try {
       const response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${id}`,
@@ -136,6 +150,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
       this.setState({
         todos: this.state.todos.filter(todo => todo.id !== id),
+        isLoading: false,
       });
     } catch (error) {
       throw error;
@@ -143,6 +158,10 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   public handleEditTodo = async (newTodoText: string, todoId: string) => {
+    this.setState({
+      isLoading: true,
+    });
+
     try {
       const response = await fetch(
         `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todoId}`,
@@ -172,9 +191,10 @@ export default class App extends React.Component<AppProps, AppState> {
             return todoItem;
           }
         }),
+        isLoading: false,
       });
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 

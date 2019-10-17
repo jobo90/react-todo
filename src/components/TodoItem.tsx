@@ -38,21 +38,27 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
     });
   };
 
-  public handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    let val: string = this.state.todoText.trim();
+  public handleKeyEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' || e.key === 'Escape') {
-      if (val) {
-        this.setState({
-          todoText: val,
-          editing: false,
-        });
-        this.props.onEdit(this.state.todoText, this.props.todo.id);
-      }
+      this.handleSubmit();
+    }
+  };
+
+  public handleSubmit = () => {
+    let val: string = this.state.todoText.trim();
+
+    if (val) {
+      this.setState({
+        todoText: val,
+        editing: false,
+      });
+      this.props.onEdit(this.state.todoText, this.props.todo.id);
     }
   };
 
   public setOnEditFalse = () => {
     this.setState({ editing: false });
+    this.handleSubmit();
   };
 
   public handleComplete = () => {
@@ -67,14 +73,14 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
           className={this.props.todo.completed ? 'completed' : undefined}
         >
           <label className={this.state.editing ? 'hidden' : 'edit'}>
-            {this.state.todoText}
+            {this.props.todo.title}
           </label>
           <input
             autoFocus={this.state.editing ? true : false}
             className={this.state.editing ? 'edit' : 'hidden'}
             onBlur={this.setOnEditFalse}
             onChange={e => this.handleChange(e)}
-            onKeyDown={e => this.handleSubmit(e)}
+            onKeyDown={e => this.handleKeyEvent(e)}
             value={this.state.todoText}
           />
         </li>
