@@ -1,10 +1,12 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import { Todo } from './types';
 
 import './TodoItem.css';
 
 export interface TodoItemProps {
+  /** Set to true when todos are fetched */
   isLoading: boolean;
   todo: Todo;
   onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -17,6 +19,32 @@ interface TodoItemState {
   editing: boolean;
 }
 
+const TodoItemDiv = styled.div`
+  display: flex;
+
+  .completed {
+    text-decoration: line-through;
+  }
+
+  .hidden {
+    display: none;
+  }
+`;
+
+interface TodoItemStyledProps {
+  completed: boolean;
+}
+
+const TodoItemStyled = styled.li<TodoItemStyledProps>`
+  text-decoration: ${(props) =>
+    props.completed ? 'line-through' : 'none'};
+`;
+
+/**
+ * This component represents a todoitem to render them in the todolist
+ * @link: http://
+ * @todo: fix foo http://
+ */
 export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   constructor(props: TodoItemProps) {
     super(props);
@@ -76,33 +104,43 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   };
 
   public render() {
+    let lableClassName;
+    let autofocusInput;
+
+    if (this.state.editing) {
+      lableClassName = 'hidden';
+      autofocusInput = true;
+    } else {
+      lableClassName = 'edit';
+      autofocusInput = false;
+    }
+
     return (
-      <div className="todoItem">
-        <li
-          id={this.props.todo.id.toString()}
-          className={this.props.todo.completed ? 'completed' : undefined}
+      <TodoItemDiv>
+        <TodoItemStyled
+          id={this.props.todo.id}
+          completed={this.props.todo.completed}
+          // className={this.props.todo.completed ? 'completed' : 'undefined'}
         >
-          <label className={this.state.editing ? 'hidden' : 'edit'}>
+          <label className={lableClassName}>
             {this.props.todo.title}
           </label>
           <input
-            autoFocus={this.state.editing ? true : false}
+            autoFocus={autofocusInput}
             className={this.state.editing ? 'edit' : 'hidden'}
             onBlur={this.setOnEditFalse}
-            onChange={e => this.handleChange(e)}
-            onKeyDown={e => this.handleKeyEvent(e)}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyEvent}
             value={this.state.todoText}
           />
-        </li>
-
-        {/* If in edit mode don't show the Complete button */}
-        {this.state.editing ? null : (
+        </TodoItemStyled>
+        
+        {this.state.editing ? '' : (
           <button onClick={this.handleComplete} disabled={this.props.isLoading}>
             Complete
           </button>
         )}
 
-        {/* If in edit mode don't show save instead of edit button */}
         <button onClick={this.handleEdit} disabled={this.props.isLoading}>
           {this.state.editing ? 'Save' : 'Edit'}
         </button>
@@ -110,7 +148,7 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
         <button onClick={this.props.onDelete} disabled={this.props.isLoading}>
           Delete
         </button>
-      </div>
+      </TodoItemDiv>
     );
   }
 }

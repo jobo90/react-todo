@@ -37,7 +37,7 @@ export default class App extends React.Component<AppProps, AppState> {
         throw Error(response.statusText);
       }
 
-      const json = await response.json();
+      const json: Todo[] = await response.json();
 
       this.setState({
         todos: [...json, ...this.state.todos],
@@ -79,6 +79,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
       // Convert the response to json
       const json: Todo = await response.json();
+
       // Add the new todo item to the top of the todos in state and set isLoading to false to enable all buttons again
       this.setState({
         todos: [json, ...this.state.todos],
@@ -196,18 +197,20 @@ export default class App extends React.Component<AppProps, AppState> {
         throw Error(response.statusText);
       }
 
+      const todos: Todo[] = this.state.todos.map(todoItem => {
+        if (todoItem.id === todoId) {
+          return {
+            ...todoItem,
+            title: newTodoText,
+          };
+        } else {
+          return todoItem;
+        }
+      });
+
       // Map over the state and change the items title where the id matches, then set isLoading to false to enable all buttons again
       this.setState({
-        todos: this.state.todos.map(todoItem => {
-          if (todoItem.id === todoId) {
-            return {
-              ...todoItem,
-              title: newTodoText,
-            };
-          } else {
-            return todoItem;
-          }
-        }),
+        todos,
         isLoading: false,
       });
     } catch (error) {

@@ -1,6 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import { Todo } from './types';
+
+const Title = styled.h1`
+  font-size: 2em;
+  text-align: center;
+  color: #135790;
+`;
 
 interface TodoHeaderState {
   title: string;
@@ -34,7 +41,7 @@ export default class TodoHeader extends React.Component<
   ) => {
     e.preventDefault();
     this.props.onSubmit({
-      id: Date.now().toString(),
+      id: String(Date.now()),
       title: this.state.title,
       completed: false,
     });
@@ -46,6 +53,7 @@ export default class TodoHeader extends React.Component<
   public render() {
     return (
       <form onSubmit={this.handleSubmit}>
+        <Title>Test</Title>
         <input
           aria-label="Add todo"
           name="title"
