@@ -17,11 +17,18 @@ interface AppState {
 
 const TodoContainer = styled.div`
   align-content: center;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   max-width: 600px;
-  width: 500px;
+  width: 500px;  
+
+  > ul {
+    margin: 10px 0 0 0;
+    padding: 0;
+    width: 100%;
+  }
 `;
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -270,7 +277,6 @@ export default class App extends React.Component<AppProps, AppState> {
     return (
       <TodoContainer>
         <TodoHeader onSubmit={this.addTodo} />
-        {this.state.isLoading ? <p>Loading...</p> : null}
         <ul>{todos.map(this.renderTodoItems)}</ul>
         <div>Todos left: {this.showTodosLeft()}</div>
         <div>
@@ -280,6 +286,7 @@ export default class App extends React.Component<AppProps, AppState> {
             Completed
           </button>
         </div>
+        {this.state.isLoading ? <p>Loading...</p> : null}
       </TodoContainer>
     );
   }

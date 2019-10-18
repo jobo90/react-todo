@@ -30,7 +30,7 @@ const AddTodoInputStyled = styled.input`
   text-indent: 18px;
   width: 90%;
   ::placeholder {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.5);
   }
 `;
 
@@ -57,12 +57,6 @@ const AddTodoButtonStyled = styled.button`
     fill: #333;
   }
 `;
-
-// const StyledAddButton = styled(AddIcon)`
-//   &:hover {
-//     color: red;
-//   }
-// `;
 
 interface TodoHeaderState {
   title: string;
@@ -123,7 +117,7 @@ export default class TodoHeader extends React.Component<
           value="Add ToDo"
           onClick={this.handleSubmit}
         >
-          <AddIcon height={20} width={20} />
+          <AddIcon />
         </AddTodoButtonStyled>
       </AddTodoFormStyled>
     );

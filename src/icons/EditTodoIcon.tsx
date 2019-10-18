@@ -1,13 +1,8 @@
 import React from 'react';
 
-interface AddIconProps {
-  height: number;
-  width: number;
-}
-
-function AddIcon(props: AddIconProps) {
+function AddIcon() {
   return (
-    <svg height={props.height} width={props.width} viewBox="0 0 528.899 528.899">
+    <svg height={18} width={18} viewBox="0 0 528.899 528.899">
       <path
         d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981
 		c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611
