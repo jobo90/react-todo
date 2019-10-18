@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import { TodoItem } from './components/TodoItem';
 import TodoHeader from './components/TodoHeader';
@@ -13,6 +14,15 @@ interface AppState {
   todosToShow: string;
   isLoading: boolean;
 }
+
+const TodoContainer = styled.div`
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 600px;
+  width: 500px;
+`;
 
 export default class App extends React.Component<AppProps, AppState> {
   public state: AppState = {
@@ -216,7 +226,7 @@ export default class App extends React.Component<AppProps, AppState> {
     } catch (error) {
       throw error;
     }
-  };  
+  };
 
   /** Set the state to show the todos by filter (all, active, completed) */
   private filterTodos = (filter: string) => {
@@ -258,7 +268,7 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     return (
-      <div>
+      <TodoContainer>
         <TodoHeader onSubmit={this.addTodo} />
         {this.state.isLoading ? <p>Loading...</p> : null}
         <ul>{todos.map(this.renderTodoItems)}</ul>
@@ -270,7 +280,7 @@ export default class App extends React.Component<AppProps, AppState> {
             Completed
           </button>
         </div>
-      </div>
+      </TodoContainer>
     );
   }
 }

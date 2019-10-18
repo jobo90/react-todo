@@ -2,6 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Todo } from './types';
+import CompleteTodoIcon from '../icons/CompleteTodoIcon';
+import EditTodoIcon from '../icons/EditTodoIcon';
+import SaveTodoIcon from '../icons/SaveTodoIcon';
+import DeleteTodoIcon from '../icons/DeleteTodoIcon';
 
 import './TodoItem.css';
 
@@ -19,25 +23,26 @@ interface TodoItemState {
   editing: boolean;
 }
 
-const TodoItemDiv = styled.div`
-  display: flex;
-
-  .completed {
-    text-decoration: line-through;
-  }
-
-  .hidden {
-    display: none;
-  }
-`;
-
 interface TodoItemStyledProps {
   completed: boolean;
 }
 
 const TodoItemStyled = styled.li<TodoItemStyledProps>`
-  text-decoration: ${(props) =>
-    props.completed ? 'line-through' : 'none'};
+  align-items: center;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0px 1px 2px rgba(44, 62, 80, 0.1);
+  color: #444;
+  display: flex;
+  height: auto;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 15px 15px;
+  text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
+
+  .hidden {
+    display: none;
+  }
 `;
 
 /**
@@ -104,51 +109,58 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   };
 
   public render() {
-    let lableClassName;
+    let labelClassName;
     let autofocusInput;
+    let inputClassName;
+    let buttonIcon;
 
     if (this.state.editing) {
-      lableClassName = 'hidden';
+      labelClassName = 'hidden';
       autofocusInput = true;
+      inputClassName = 'edit';
+      buttonIcon = <SaveTodoIcon height={20} width={20} />;
     } else {
-      lableClassName = 'edit';
+      labelClassName = 'edit';
       autofocusInput = false;
+      inputClassName = 'hidden';
+      buttonIcon = <EditTodoIcon height={20} width={20} />;
     }
 
     return (
-      <TodoItemDiv>
-        <TodoItemStyled
-          id={this.props.todo.id}
-          completed={this.props.todo.completed}
-          // className={this.props.todo.completed ? 'completed' : 'undefined'}
-        >
-          <label className={lableClassName}>
-            {this.props.todo.title}
-          </label>
-          <input
-            autoFocus={autofocusInput}
-            className={this.state.editing ? 'edit' : 'hidden'}
-            onBlur={this.setOnEditFalse}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyEvent}
-            value={this.state.todoText}
-          />
-        </TodoItemStyled>
-        
-        {this.state.editing ? '' : (
-          <button onClick={this.handleComplete} disabled={this.props.isLoading}>
-            Complete
+      <TodoItemStyled
+        id={this.props.todo.id}
+        completed={this.props.todo.completed}
+      >
+        <label className={labelClassName}>{this.props.todo.title}</label>
+        <input
+          autoFocus={autofocusInput}
+          className={inputClassName}
+          onBlur={this.setOnEditFalse}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyEvent}
+          value={this.state.todoText}
+        />
+        <div className="buttons">
+          {this.state.editing ? (
+            ''
+          ) : (
+            <button
+              onClick={this.handleComplete}
+              disabled={this.props.isLoading}
+            >
+              <CompleteTodoIcon height={20} width={20} />
+            </button>
+          )}
+
+          <button onClick={this.handleEdit} disabled={this.props.isLoading}>
+            {buttonIcon}
           </button>
-        )}
 
-        <button onClick={this.handleEdit} disabled={this.props.isLoading}>
-          {this.state.editing ? 'Save' : 'Edit'}
-        </button>
-
-        <button onClick={this.props.onDelete} disabled={this.props.isLoading}>
-          Delete
-        </button>
-      </TodoItemDiv>
+          <button onClick={this.props.onDelete} disabled={this.props.isLoading}>
+            <DeleteTodoIcon height={20} width={20} />
+          </button>
+        </div>
+      </TodoItemStyled>
     );
   }
 }
