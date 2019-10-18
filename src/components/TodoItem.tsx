@@ -16,6 +16,7 @@ export interface TodoItemProps {
   onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onEdit: (val: string, todoId: string) => void;
   onToggleComplete: (todo: Todo) => void;
+  className: string;
 }
 
 interface TodoItemState {
@@ -39,6 +40,10 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
   margin-bottom: 10px;
   padding: 15px 0px 15px 15px;
   text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
+
+  &.completed {
+    background: #dedede;
+  }
 
   .hidden {
     display: none;
@@ -83,6 +88,10 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
  * @todo: fix foo http://
  */
 export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
+  static defaultProps = {
+    className: '',
+  }
+
   constructor(props: TodoItemProps) {
     super(props);
     this.state = {
@@ -145,6 +154,7 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
     let autofocusInput;
     let inputClassName;
     let buttonIcon;
+    let todoItemClassName;
 
     if (this.state.editing) {
       labelClassName = 'hidden';
@@ -158,10 +168,16 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
       buttonIcon = <EditTodoIcon />;
     }
 
+    if (this.props.todo.completed) {
+      todoItemClassName = 'completed';
+    } else {
+      todoItemClassName = '';
+    }
+
+    const classes = todoItemClassName + ' ' + this.props.className;
+
     return (
-      <TodoItemStyled
-        completed={this.props.todo.completed}
-      >
+      <TodoItemStyled completed={this.props.todo.completed} className={classes}>
         <label className={labelClassName}>{this.props.todo.title}</label>
         <input
           autoFocus={autofocusInput}
@@ -184,11 +200,19 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
             </button>
           )}
 
-          <button className="editButton" onClick={this.handleEdit} disabled={this.props.isLoading}>
+          <button
+            className="editButton"
+            onClick={this.handleEdit}
+            disabled={this.props.isLoading}
+          >
             {buttonIcon}
           </button>
 
-          <button className="deleteButton" onClick={this.props.onDelete} disabled={this.props.isLoading}>
+          <button
+            className="deleteButton"
+            onClick={this.props.onDelete}
+            disabled={this.props.isLoading}
+          >
             <DeleteTodoIcon />
           </button>
         </div>

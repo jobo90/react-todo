@@ -29,6 +29,23 @@ const TodoContainer = styled.div`
     padding: 0;
     width: 100%;
   }
+
+  > .filterButtons button {
+    background: #2596b9;
+    border: 0px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    float: left;
+    fill: #444;
+    outline: none;
+    padding: 10px;
+    margin: 5px;
+  }
+
+  > .filterButtons button:hover {
+    color: #333;
+  }
 `;
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -279,7 +296,7 @@ export default class App extends React.Component<AppProps, AppState> {
         <TodoHeader onSubmit={this.addTodo} />
         <ul>{todos.map(this.renderTodoItems)}</ul>
         <div>Todos left: {this.showTodosLeft()}</div>
-        <div>
+        <div className="filterButtons">
           <button onClick={() => this.filterTodos('all')}>All</button>
           <button onClick={() => this.filterTodos('active')}>Active</button>
           <button onClick={() => this.filterTodos('completed')}>
