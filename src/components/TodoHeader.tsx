@@ -13,6 +13,10 @@ const AddTodoFormStyled = styled.form`
   justify-content: center;
   padding: 18px;
   width: 100%;
+
+  @media (max-width: 570px) {
+    width: 90%;
+  }
 `;
 
 const AddTodoInputStyled = styled.input`

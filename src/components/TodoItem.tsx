@@ -35,7 +35,6 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
   box-shadow: 0px 1px 2px rgba(44, 62, 80, 0.1);
   color: #444;
   display: flex;
-  height: 30px;
   justify-content: space-between;
   margin-bottom: 10px;
   padding: 15px 0px 15px 15px;
