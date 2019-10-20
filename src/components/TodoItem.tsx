@@ -50,7 +50,7 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
 
   .buttons {
     border-radius: 0px 5px 5px 0px;
-    display: flex;
+    display: none;
     justify-content: flex-end;
     margin-right: 5px;
     top: 0;
@@ -66,6 +66,10 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
     fill: #444;
     outline: none;
     width: 50px;
+  }
+
+  &:hover .buttons {
+    display: flex;
   }
 
   .completeButton:hover {

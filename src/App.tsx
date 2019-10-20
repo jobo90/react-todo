@@ -48,6 +48,10 @@ const TodoContainer = styled.div`
     color: #333;
   }
 
+  > .todosLeft {
+    margin: 20px 0;
+  }
+
   @media (max-width: 570px) {
     > ul {
       width: 90%;
@@ -302,7 +306,7 @@ export default class App extends React.Component<AppProps, AppState> {
       <TodoContainer>
         <TodoHeader onSubmit={this.addTodo} />
         <ul>{todos.map(this.renderTodoItems)}</ul>
-        <div>Todos left: {this.showTodosLeft()}</div>
+        <div className="todosLeft">Todos left: {this.showTodosLeft()}</div>
         <div className="filterButtons">
           <button onClick={() => this.filterTodos('all')}>All</button>
           <button onClick={() => this.filterTodos('active')}>Active</button>
