@@ -47,7 +47,7 @@ const AddTodoButtonStyled = styled.button`
   height: 45px;
   justify-content: center;
   outline: none;
-  width: 45px;  
+  width: 45px;
 
   svg {
     fill: white;
@@ -70,33 +70,30 @@ export default class TodoHeader extends React.Component<
   TodoHeaderProps,
   TodoHeaderState
 > {
-  constructor(props: TodoHeaderProps) {
-    super(props);
-    this.state = {
-      title: '',
-    };
-  }
+  public state: TodoHeaderState = {
+    title: ''
+  };
 
   /** Changing the state on every key stroke */
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      title: e.target.value,
+      title: e.target.value
     });
   };
 
   /** Pass the new todo to the parent component  */
   public handleSubmit = (
-    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
     if (this.state.title) {
       this.props.onSubmit({
         id: String(Date.now()),
         title: this.state.title,
-        completed: false,
+        completed: false
       });
       this.setState({
-        title: '',
+        title: ''
       });
     }
   };

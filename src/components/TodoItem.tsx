@@ -89,28 +89,25 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
  */
 export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   static defaultProps = {
-    className: '',
-  }
+    className: ''
+  };
 
-  constructor(props: TodoItemProps) {
-    super(props);
-    this.state = {
-      todoText: props.todo.title,
-      editing: false,
-    };
-  }
+  public state: TodoItemState = {
+    todoText: this.props.todo.title,
+    editing: false
+  };
 
   /** Toggling the editing state to show the input / hide the label of the todo and vice versa */
   public handleEdit = () => {
     this.setState({
-      editing: !this.state.editing,
+      editing: !this.state.editing
     });
   };
 
   /** Updating the todoText in state on every key stroke which later gets passed to the parent component and updated there as well */
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      todoText: e.target.value,
+      todoText: e.target.value
     });
   };
 
@@ -131,7 +128,7 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
       // Sets the state of TodoItem with the new value
       this.setState({
         todoText: val,
-        editing: false,
+        editing: false
       });
       // Passes the new value to the parent component
       this.props.onEdit(this.state.todoText, this.props.todo.id);
