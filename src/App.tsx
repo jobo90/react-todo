@@ -13,6 +13,7 @@ interface AppState {
   todos: Array<Todo>;
   todosToShow: string;
   isLoading: boolean;
+  error: string;
 }
 
 const TodoContainer = styled.div`
@@ -51,7 +52,11 @@ const TodoContainer = styled.div`
   > .todosLeft {
     margin: 20px 0;
   }
-  
+
+  > .errorMessage {
+    color: #d42626;
+  }
+
   @media (max-width: 570px) {
     > ul {
       width: 90%;
@@ -64,6 +69,7 @@ export default class App extends React.Component<AppProps, AppState> {
     todos: [],
     todosToShow: 'all',
     isLoading: false,
+    error: '',
   };
 
   /** Fetching todos from API */
@@ -71,6 +77,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
+      error: '',
     });
 
     try {
@@ -79,17 +86,22 @@ export default class App extends React.Component<AppProps, AppState> {
       );
 
       if (!response.ok) {
-        throw Error(response.statusText);
+        console.log('Bla');
+        this.displayError(
+          'Something went wrong, please refresh the page or try again.',
+        );
+      } else {
+        const todoJson: Todo[] = await response.json();
+
+        this.setState({
+          todos: [...todoJson, ...this.state.todos],
+          isLoading: false,
+        });
       }
-
-      const todoJson: Todo[] = await response.json();
-
-      this.setState({
-        todos: [...todoJson, ...this.state.todos],
-        isLoading: false,
-      });
     } catch (error) {
-      console.log(error);
+      this.displayError(
+        'Something went wrong, please refresh the page or try again.', error
+      );
     }
   }
 
@@ -98,6 +110,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
+      error: '',
     });
 
     // Sending POST request to server to add the todo item
@@ -119,19 +132,23 @@ export default class App extends React.Component<AppProps, AppState> {
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        throw Error(response.statusText);
+        this.displayError(
+          'Something went wrong, please refresh the page or try again.',
+        );
+      } else {
+        // Convert the response to json
+        const todoJson: Todo = await response.json();
+
+        // Add the new todo item to the top of the todos in state and set isLoading to false to enable all buttons again
+        this.setState({
+          todos: [todoJson, ...this.state.todos],
+          isLoading: false,
+        });
       }
-
-      // Convert the response to json
-      const todoJson: Todo = await response.json();
-
-      // Add the new todo item to the top of the todos in state and set isLoading to false to enable all buttons again
-      this.setState({
-        todos: [todoJson, ...this.state.todos],
-        isLoading: false,
-      });
     } catch (error) {
-      throw error;
+      this.displayError(
+        'Something went wrong, please refresh the page or try again.', error
+      );
     }
   };
 
@@ -140,6 +157,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
+      error: '',
     });
 
     // Sending PATCH request to server to change the completed status of the item
@@ -159,28 +177,32 @@ export default class App extends React.Component<AppProps, AppState> {
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        throw Error(response.statusText);
+        this.displayError(
+          'Something went wrong, please refresh the page or try again.',
+        );
+      } else {
+        // Convert the response to json
+        const todoJson = await response.json();
+
+        // Map over the state and change the items completed state where the id matches, then set isLoading to false to enable all buttons again
+        this.setState({
+          todos: this.state.todos.map(todoItem => {
+            if (todoItem.id === todoJson.id) {
+              return {
+                ...todoItem,
+                completed: !todoItem.completed,
+              };
+            } else {
+              return todoItem;
+            }
+          }),
+          isLoading: false,
+        });
       }
-
-      // Convert the response to json
-      const todoJson = await response.json();
-
-      // Map over the state and change the items completed state where the id matches, then set isLoading to false to enable all buttons again
-      this.setState({
-        todos: this.state.todos.map(todoItem => {
-          if (todoItem.id === todoJson.id) {
-            return {
-              ...todoItem,
-              completed: !todoItem.completed,
-            };
-          } else {
-            return todoItem;
-          }
-        }),
-        isLoading: false,
-      });
     } catch (error) {
-      throw error;
+      this.displayError(
+        'Something went wrong, please refresh the page or try again.', error
+      );
     }
   };
 
@@ -189,6 +211,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
+      error: '',
     });
 
     // Sending DELETE request to server to remove the selected todo item
@@ -202,16 +225,20 @@ export default class App extends React.Component<AppProps, AppState> {
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        throw Error(response.statusText);
+        this.displayError(
+          'Something went wrong, please refresh the page or try again.',
+        );
+      } else {
+        // Filter the todos in state to remove the selected todo item, then set isLoading to false to enable all buttons again
+        this.setState({
+          todos: this.state.todos.filter(todo => todo.id !== id),
+          isLoading: false,
+        });
       }
-
-      // Filter the todos in state to remove the selected todo item, then set isLoading to false to enable all buttons again
-      this.setState({
-        todos: this.state.todos.filter(todo => todo.id !== id),
-        isLoading: false,
-      });
     } catch (error) {
-      throw error;
+      this.displayError(
+        'Something went wrong, please refresh the page or try again.', error
+      );
     }
   };
 
@@ -220,6 +247,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
+      error: '',
     });
 
     // Sending PATCH request to server to change the title of the item
@@ -239,27 +267,38 @@ export default class App extends React.Component<AppProps, AppState> {
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        throw Error(response.statusText);
+        this.displayError('Something went wrong, please refresh the page or try again.')
+      } else {
+        const todos: Todo[] = this.state.todos.map(todoItem => {
+          if (todoItem.id === todoId) {
+            return {
+              ...todoItem,
+              title: newTodoText,
+            };
+          } else {
+            return todoItem;
+          }
+        });
+  
+        // Map over the state and change the items title where the id matches, then set isLoading to false to enable all buttons again
+        this.setState({
+          todos,
+          isLoading: false,
+        });
       }
-
-      const todos: Todo[] = this.state.todos.map(todoItem => {
-        if (todoItem.id === todoId) {
-          return {
-            ...todoItem,
-            title: newTodoText,
-          };
-        } else {
-          return todoItem;
-        }
-      });
-
-      // Map over the state and change the items title where the id matches, then set isLoading to false to enable all buttons again
-      this.setState({
-        todos,
-        isLoading: false,
-      });
     } catch (error) {
-      throw error;
+      this.displayError('Something went wrong, please refresh the page or try again.', error)
+    }
+  };
+
+  public displayError = (message: string, error?: Error) => {
+    this.setState({
+      isLoading: false,
+      error: message,
+    });
+
+    if (error) {
+      console.error(error);
     }
   };
 
@@ -315,6 +354,9 @@ export default class App extends React.Component<AppProps, AppState> {
           </button>
         </div>
         {this.state.isLoading ? <p>Loading...</p> : null}
+        {this.state.error ? (
+          <p className="errorMessage">Error: {this.state.error}</p>
+        ) : null}
       </TodoContainer>
     );
   }
