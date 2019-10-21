@@ -293,7 +293,7 @@ export default class App extends React.Component<AppProps, AppState> {
   private renderTodoItems = (todo: Todo) => {
     return (
       <TodoContext.Provider
-        value={[this.handleDeleteTodo, this.handleEditTodo, this.handleDeleteTodo]}
+        value={this.handleDeleteTodo, this.handleEditTodo, this.handleDeleteTodo}
       >
         <TodoItem
           isLoading={this.state.isLoading}
