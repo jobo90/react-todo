@@ -166,19 +166,16 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
     const { props } = this;
 
     let labelClassName;
-    // let autofocusInput;
     let inputClassName;
     let buttonIcon;
     let todoItemClassName;
 
     if (this.state.editing) {
       labelClassName = 'hidden';
-      // autofocusInput = true;
       inputClassName = 'edit';
       buttonIcon = <SaveTodoIcon />;
     } else {
       labelClassName = 'edit';
-      // autofocusInput = false;
       inputClassName = 'hidden';
       buttonIcon = <EditTodoIcon />;
     }
@@ -195,7 +192,6 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
       <TodoItemStyled completed={props.todo.completed} className={classes}>
         <label className={labelClassName}>{props.todo.title}</label>
         <input
-          // autoFocus={autofocusInput}
           className={inputClassName}
           onBlur={this.handleOutsideClick}
           onChange={this.handleChange}
