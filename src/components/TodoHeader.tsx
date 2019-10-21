@@ -57,7 +57,7 @@ const AddTodoButtonStyled = styled.button`
   svg {
     fill: white;
   }
-  
+
   &:hover svg {
     fill: #333;
   }
@@ -71,26 +71,23 @@ interface TodoHeaderProps {
   onSubmit(todo: Todo): void;
 }
 
-export default class TodoHeader extends React.Component<
-  TodoHeaderProps,
-  TodoHeaderState
-> {
+export default class TodoHeader extends React.Component<TodoHeaderProps, TodoHeaderState> {
   public state: TodoHeaderState = {
     title: '',
   };
 
   /** Changing the state on every key stroke */
-  public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  public handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      title: e.target.value,
+      title: event.target.value,
     });
   };
 
   /** Pass the new todo to the parent component  */
   public handleSubmit = (
-    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
+    event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
-    e.preventDefault();
+    event.preventDefault();
     if (this.state.title) {
       this.props.onSubmit({
         id: String(Date.now()),

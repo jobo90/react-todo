@@ -11,7 +11,7 @@ export interface TodoItemProps {
   /** Set to true when todos are fetched */
   isLoading: boolean;
   todo: Todo;
-  onDelete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onDelete: (id: string) => void;
   onEdit: (val: string, todoId: string) => void;
   onToggleComplete: (todo: Todo) => void;
   className: string;
@@ -35,6 +35,7 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  min-height: 30px;
   padding: 15px 0px 15px 15px;
   text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
 
@@ -60,7 +61,6 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
     border: 0px;
     box-shadow: none;
     cursor: pointer;
-    float: left;
     fill: #444;
     outline: none;
     width: 50px;
@@ -93,6 +93,8 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
     className: '',
   };
 
+  private todoInput = React.createRef<HTMLInputElement>();
+
   public state: TodoItemState = {
     todoText: this.props.todo.title,
     editing: false,
@@ -100,21 +102,30 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
 
   /** Toggling the editing state to show the input / hide the label of the todo and vice versa */
   public handleEdit = () => {
-    this.setState({
-      editing: !this.state.editing,
-    });
+    const node = this.todoInput.current;
+
+    this.setState(
+      {
+        editing: !this.state.editing,
+      },
+      () => {
+        node && node.focus();
+      },
+    );
   };
 
-  /** Updating the todoText in state on every key stroke which later gets passed to the parent component and updated there as well */
-  public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /** Updating the todoText in state on every key stroke which later gets passed to the parent
+   * component and updated there as well
+   */
+  public handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      todoText: e.target.value,
+      todoText: event.target.value,
     });
   };
 
   /** Check if the key pressed was enter or escape and then call the handleSubmit method */
-  public handleKeyEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === 'Escape') {
+  public handleKeyEvent = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' || event.key === 'Escape') {
       this.handleSubmit();
     }
   };
@@ -122,13 +133,13 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   /** Processes the edited todo text and passes it to the parent component */
   public handleSubmit = () => {
     // Remove all spaces before and after the text
-    let val: string = this.state.todoText.trim();
+    let todoText: string = this.state.todoText.trim();
 
     // Checks if the string is longer than 0
-    if (val) {
+    if (todoText) {
       // Sets the state of TodoItem with the new value
       this.setState({
-        todoText: val,
+        todoText,
         editing: false,
       });
       // Passes the new value to the parent component
@@ -137,7 +148,7 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   };
 
   /** Gets called when user clicks outside of input */
-  public setOnEditFalse = () => {
+  public handleOutsideClick = () => {
     this.setState({ editing: false });
     this.handleSubmit();
   };
@@ -147,21 +158,27 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
     this.props.onToggleComplete(this.props.todo);
   };
 
+  public handleDelete = () => {
+    this.props.onDelete(this.props.todo.id);
+  };
+
   public render() {
+    const { props } = this;
+
     let labelClassName;
-    let autofocusInput;
+    // let autofocusInput;
     let inputClassName;
     let buttonIcon;
     let todoItemClassName;
 
     if (this.state.editing) {
       labelClassName = 'hidden';
-      autofocusInput = true;
+      // autofocusInput = true;
       inputClassName = 'edit';
       buttonIcon = <SaveTodoIcon />;
     } else {
       labelClassName = 'edit';
-      autofocusInput = false;
+      // autofocusInput = false;
       inputClassName = 'hidden';
       buttonIcon = <EditTodoIcon />;
     }
@@ -172,17 +189,18 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
       todoItemClassName = '';
     }
 
-    const classes = todoItemClassName + ' ' + this.props.className;
+    const classes = todoItemClassName + ' ' + props.className;
 
     return (
-      <TodoItemStyled completed={this.props.todo.completed} className={classes}>
-        <label className={labelClassName}>{this.props.todo.title}</label>
+      <TodoItemStyled completed={props.todo.completed} className={classes}>
+        <label className={labelClassName}>{props.todo.title}</label>
         <input
-          autoFocus={autofocusInput}
+          // autoFocus={autofocusInput}
           className={inputClassName}
-          onBlur={this.setOnEditFalse}
+          onBlur={this.handleOutsideClick}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyEvent}
+          ref={this.todoInput}
           value={this.state.todoText}
         />
         <div className="buttons">
@@ -190,26 +208,29 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
             ''
           ) : (
             <button
+              type="button"
               className="completeButton"
               onClick={this.handleComplete}
-              disabled={this.props.isLoading}
+              disabled={props.isLoading}
             >
               <CompleteTodoIcon />
             </button>
           )}
 
           <button
+            type="button"
             className="editButton"
             onClick={this.handleEdit}
-            disabled={this.props.isLoading}
+            disabled={props.isLoading}
           >
             {buttonIcon}
           </button>
 
           <button
+            type="button"
             className="deleteButton"
-            onClick={this.props.onDelete}
-            disabled={this.props.isLoading}
+            onClick={this.handleDelete}
+            disabled={props.isLoading}
           >
             <DeleteTodoIcon />
           </button>

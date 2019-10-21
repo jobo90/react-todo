@@ -64,6 +64,8 @@ const TodoContainer = styled.div`
   }
 `;
 
+const fetchURL = 'https://my-json-server.typicode.com/jobo90/restapi2/todos';
+
 export default class App extends React.Component<AppProps, AppState> {
   public state: AppState = {
     todos: [],
@@ -81,15 +83,10 @@ export default class App extends React.Component<AppProps, AppState> {
     });
 
     try {
-      const response: Response = await fetch(
-        'https://my-json-server.typicode.com/jobo90/restapi2/todos',
-      );
+      const response: Response = await fetch(fetchURL);
 
       if (!response.ok) {
-        console.log('Bla');
-        this.displayError(
-          'Something went wrong, please refresh the page or try again.',
-        );
+        this.displayError();
       } else {
         const todoJson: Todo[] = await response.json();
 
@@ -99,9 +96,7 @@ export default class App extends React.Component<AppProps, AppState> {
         });
       }
     } catch (error) {
-      this.displayError(
-        'Something went wrong, please refresh the page or try again.', error
-      );
+      this.displayError(error);
     }
   }
 
@@ -115,26 +110,21 @@ export default class App extends React.Component<AppProps, AppState> {
 
     // Sending POST request to server to add the todo item
     try {
-      const response: Response = await fetch(
-        'https://my-json-server.typicode.com/jobo90/restapi2/todos',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            id: todo.id,
-            title: todo.title,
-            completed: todo.completed,
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
+      const response: Response = await fetch(fetchURL, {
+        method: 'POST',
+        body: JSON.stringify({
+          id: todo.id,
+          title: todo.title,
+          completed: todo.completed,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
         },
-      );
+      });
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        this.displayError(
-          'Something went wrong, please refresh the page or try again.',
-        );
+        this.displayError();
       } else {
         // Convert the response to json
         const todoJson: Todo = await response.json();
@@ -146,9 +136,7 @@ export default class App extends React.Component<AppProps, AppState> {
         });
       }
     } catch (error) {
-      this.displayError(
-        'Something went wrong, please refresh the page or try again.', error
-      );
+      this.displayError(error);
     }
   };
 
@@ -162,24 +150,19 @@ export default class App extends React.Component<AppProps, AppState> {
 
     // Sending PATCH request to server to change the completed status of the item
     try {
-      const response: Response = await fetch(
-        `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todo.id}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({
-            completed: !todo.completed,
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
+      const response: Response = await fetch(`${fetchURL}/${todo.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          completed: !todo.completed,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
         },
-      );
+      });
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        this.displayError(
-          'Something went wrong, please refresh the page or try again.',
-        );
+        this.displayError();
       } else {
         // Convert the response to json
         const todoJson = await response.json();
@@ -200,9 +183,7 @@ export default class App extends React.Component<AppProps, AppState> {
         });
       }
     } catch (error) {
-      this.displayError(
-        'Something went wrong, please refresh the page or try again.', error
-      );
+      this.displayError(error);
     }
   };
 
@@ -216,18 +197,13 @@ export default class App extends React.Component<AppProps, AppState> {
 
     // Sending DELETE request to server to remove the selected todo item
     try {
-      const response: Response = await fetch(
-        `https://my-json-server.typicode.com/jobo90/restapi2/todos/${id}`,
-        {
-          method: 'DELETE',
-        },
-      );
+      const response: Response = await fetch(`${fetchURL}/${id}`, {
+        method: 'DELETE',
+      });
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        this.displayError(
-          'Something went wrong, please refresh the page or try again.',
-        );
+        this.displayError();
       } else {
         // Filter the todos in state to remove the selected todo item, then set isLoading to false to enable all buttons again
         this.setState({
@@ -236,9 +212,7 @@ export default class App extends React.Component<AppProps, AppState> {
         });
       }
     } catch (error) {
-      this.displayError(
-        'Something went wrong, please refresh the page or try again.', error
-      );
+      this.displayError(error);
     }
   };
 
@@ -252,22 +226,19 @@ export default class App extends React.Component<AppProps, AppState> {
 
     // Sending PATCH request to server to change the title of the item
     try {
-      const response = await fetch(
-        `https://my-json-server.typicode.com/jobo90/restapi2/todos/${todoId}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({
-            title: newTodoText,
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
+      const response = await fetch(`${fetchURL}/${todoId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          title: newTodoText,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
         },
-      );
+      });
 
       // Throw an error if response is not in range between 200-299
       if (!response.ok) {
-        this.displayError('Something went wrong, please refresh the page or try again.')
+        this.displayError();
       } else {
         const todos: Todo[] = this.state.todos.map(todoItem => {
           if (todoItem.id === todoId) {
@@ -279,7 +250,7 @@ export default class App extends React.Component<AppProps, AppState> {
             return todoItem;
           }
         });
-  
+
         // Map over the state and change the items title where the id matches, then set isLoading to false to enable all buttons again
         this.setState({
           todos,
@@ -287,14 +258,14 @@ export default class App extends React.Component<AppProps, AppState> {
         });
       }
     } catch (error) {
-      this.displayError('Something went wrong, please refresh the page or try again.', error)
+      this.displayError(error);
     }
   };
 
-  public displayError = (message: string, error?: Error) => {
+  public displayError = (error?: Error) => {
     this.setState({
       isLoading: false,
-      error: message,
+      error: 'Something went wrong, please refresh the page or try again.',
     });
 
     if (error) {
@@ -316,7 +287,7 @@ export default class App extends React.Component<AppProps, AppState> {
         isLoading={this.state.isLoading}
         key={todo.id}
         todo={todo}
-        onDelete={() => this.handleDeleteTodo(todo.id)}
+        onDelete={this.handleDeleteTodo}
         onEdit={this.handleEditTodo}
         onToggleComplete={this.toggleComplete}
       />
@@ -324,7 +295,7 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   /** Show the number of todos that are not completed */
-  private showTodosLeft = () => {
+  private getIncompleteTodosLen = () => {
     return this.state.todos.filter(todo => !todo.completed).length;
   };
 
@@ -345,18 +316,14 @@ export default class App extends React.Component<AppProps, AppState> {
       <TodoContainer>
         <TodoHeader onSubmit={this.addTodo} />
         <ul>{todos.map(this.renderTodoItems)}</ul>
-        <div className="todosLeft">Todos left: {this.showTodosLeft()}</div>
+        <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
         <div className="filterButtons">
           <button onClick={() => this.filterTodos('all')}>All</button>
           <button onClick={() => this.filterTodos('active')}>Active</button>
-          <button onClick={() => this.filterTodos('completed')}>
-            Completed
-          </button>
+          <button onClick={() => this.filterTodos('completed')}>Completed</button>
         </div>
         {this.state.isLoading ? <p>Loading...</p> : null}
-        {this.state.error ? (
-          <p className="errorMessage">Error: {this.state.error}</p>
-        ) : null}
+        {this.state.error ? <p className="errorMessage">Error: {this.state.error}</p> : null}
       </TodoContainer>
     );
   }
