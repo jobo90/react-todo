@@ -65,6 +65,14 @@ const TodoContainer = styled.div`
   }
 `;
 
+interface TodoContextInterface {
+  onDelete: any;
+  onEdit: any;
+  onToggleComplete: any;
+}
+
+export const TodoContext = React.createContext<TodoContextInterface | null>(null);
+
 const fetchURL = 'https://my-json-server.typicode.com/jobo90/restapi2/todos';
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -284,14 +292,18 @@ export default class App extends React.Component<AppProps, AppState> {
   /**  */
   private renderTodoItems = (todo: Todo) => {
     return (
-      <TodoItem
-        isLoading={this.state.isLoading}
-        key={todo.id}
-        todo={todo}
-        onDelete={this.handleDeleteTodo}
-        onEdit={this.handleEditTodo}
-        onToggleComplete={this.toggleComplete}
-      />
+      <TodoContext.Provider
+        value={[this.handleDeleteTodo, this.handleEditTodo, this.handleDeleteTodo]}
+      >
+        <TodoItem
+          isLoading={this.state.isLoading}
+          key={todo.id}
+          todo={todo}
+          onDelete={this.handleDeleteTodo}
+          onEdit={this.handleEditTodo}
+          onToggleComplete={this.toggleComplete}
+        />
+      </TodoContext.Provider>
     );
   };
 
@@ -319,9 +331,15 @@ export default class App extends React.Component<AppProps, AppState> {
         <ul>{todos.map(this.renderTodoItems)}</ul>
         <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
         <div className="filterButtons">
-          <button value='all' onClick={this.filterTodos}>All</button>
-          <button value='active' onClick={this.filterTodos}>Active</button>
-          <button value='completed' onClick={this.filterTodos}>Completed</button>
+          <button value="all" onClick={this.filterTodos}>
+            All
+          </button>
+          <button value="active" onClick={this.filterTodos}>
+            Active
+          </button>
+          <button value="completed" onClick={this.filterTodos}>
+            Completed
+          </button>
         </div>
         {this.state.isLoading ? <p>Loading...</p> : null}
         {this.state.error ? <p className="errorMessage">Error: {this.state.error}</p> : null}
