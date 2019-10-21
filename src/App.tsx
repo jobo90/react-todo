@@ -6,7 +6,6 @@ import TodoHeader from './components/TodoHeader';
 import { Todo } from './components/types';
 
 import './App.css';
-// import FilterButton from './components/FilterButton';
 
 export interface AppProps {}
 
@@ -66,9 +65,10 @@ const TodoContainer = styled.div`
 `;
 
 interface TodoContextInterface {
-  onDelete: any;
-  onEdit: any;
-  onToggleComplete: any;
+  
+  // onDelete(id: string): any;
+  // onEdit(newTodoText: string, todoId: string): any;
+  // onToggleComplete(todo: Todo): any;
 }
 
 export const TodoContext = React.createContext<TodoContextInterface | null>(null);
