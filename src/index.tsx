@@ -14,6 +14,10 @@ const GlobalStyle = createGlobalStyle`
     justify-content: center;
     margin-top: 0;
   }
+
+  * {
+    box-sizing: border-box;
+  }
 `;
 
 /** Entry point */

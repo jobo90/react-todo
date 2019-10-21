@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Todo } from './types';
+import Button from './Button';
 import CompleteTodoIcon from '../icons/CompleteTodoIcon';
 import EditTodoIcon from '../icons/EditTodoIcon';
 import SaveTodoIcon from '../icons/SaveTodoIcon';
@@ -88,7 +89,7 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
  * @link: http://
  * @todo: fix foo http://
  */
-export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
+export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> {
   static defaultProps = {
     className: '',
   };
@@ -165,19 +166,16 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   public render() {
     const { props } = this;
 
-    let labelClassName;
-    let inputClassName;
-    let buttonIcon;
-    let todoItemClassName;
+    let labelClassName: string;
+    let inputClassName: string;
+    let todoItemClassName: string;
 
     if (this.state.editing) {
       labelClassName = 'hidden';
       inputClassName = 'edit';
-      buttonIcon = <SaveTodoIcon />;
     } else {
       labelClassName = 'edit';
       inputClassName = 'hidden';
-      buttonIcon = <EditTodoIcon />;
     }
 
     if (this.props.todo.completed) {
@@ -203,33 +201,27 @@ export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
           {this.state.editing ? (
             ''
           ) : (
-            <button
-              type="button"
+            <Button
               className="completeButton"
               onClick={this.handleComplete}
               disabled={props.isLoading}
-            >
-              <CompleteTodoIcon />
-            </button>
+              icon={CompleteTodoIcon}
+            />
           )}
 
-          <button
-            type="button"
+          <Button
             className="editButton"
             onClick={this.handleEdit}
             disabled={props.isLoading}
-          >
-            {buttonIcon}
-          </button>
+            icon={this.state.editing ? SaveTodoIcon : EditTodoIcon}
+          />
 
-          <button
-            type="button"
+          <Button
             className="deleteButton"
             onClick={this.handleDelete}
             disabled={props.isLoading}
-          >
-            <DeleteTodoIcon />
-          </button>
+            icon={DeleteTodoIcon}
+          />
         </div>
       </TodoItemStyled>
     );

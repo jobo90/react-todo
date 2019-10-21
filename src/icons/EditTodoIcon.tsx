@@ -1,6 +1,6 @@
 import React from 'react';
 
-function AddIcon() {
+function EditTodoIcon() {
   return (
     <svg height={18} width={18} viewBox="0 0 528.899 528.899">
       <path
@@ -13,4 +13,4 @@ function AddIcon() {
   );
 }
 
-export default AddIcon;
+export default EditTodoIcon;

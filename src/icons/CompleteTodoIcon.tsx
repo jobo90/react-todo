@@ -1,6 +1,8 @@
 import React from 'react';
 
-function AddIcon() {
+export interface CompleteTodoIcon{};
+
+const CompleteTodoIcon: React.FC<CompleteTodoIcon> = () => {
   return (
     <svg height={18} width={18} viewBox="0 0 45.701 45.7">
       <path d="M20.687,38.332c-2.072,2.072-5.434,2.072-7.505,0L1.554,26.704c-2.072-2.071-2.072-5.433,0-7.504
@@ -10,4 +12,4 @@ function AddIcon() {
   );
 }
 
-export default AddIcon;
+export default CompleteTodoIcon;
