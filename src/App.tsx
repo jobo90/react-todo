@@ -6,6 +6,7 @@ import TodoHeader from './components/TodoHeader';
 import { Todo } from './components/types';
 
 import './App.css';
+// import FilterButton from './components/FilterButton';
 
 export interface AppProps {}
 
@@ -274,9 +275,9 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   /** Set the state to show the todos by filter (all, active, completed) */
-  private filterTodos = (filter: string) => {
+  private filterTodos = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     this.setState({
-      todosToShow: filter,
+      todosToShow: event.currentTarget.value,
     });
   };
 
@@ -318,9 +319,9 @@ export default class App extends React.Component<AppProps, AppState> {
         <ul>{todos.map(this.renderTodoItems)}</ul>
         <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
         <div className="filterButtons">
-          <button onClick={() => this.filterTodos('all')}>All</button>
-          <button onClick={() => this.filterTodos('active')}>Active</button>
-          <button onClick={() => this.filterTodos('completed')}>Completed</button>
+          <button value='all' onClick={this.filterTodos}>All</button>
+          <button value='active' onClick={this.filterTodos}>Active</button>
+          <button value='completed' onClick={this.filterTodos}>Completed</button>
         </div>
         {this.state.isLoading ? <p>Loading...</p> : null}
         {this.state.error ? <p className="errorMessage">Error: {this.state.error}</p> : null}
