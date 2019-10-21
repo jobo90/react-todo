@@ -20,9 +20,10 @@ const TodoContainer = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  height: auto;
+  justify-content: space-between;
   max-width: 600px;
-  width: 500px;  
+  width: 500px;
 
   > ul {
     margin: 10px 0 0 0;
@@ -45,6 +46,16 @@ const TodoContainer = styled.div`
 
   > .filterButtons button:hover {
     color: #333;
+  }
+
+  > .todosLeft {
+    margin: 20px 0;
+  }
+  
+  @media (max-width: 570px) {
+    > ul {
+      width: 90%;
+    }
   }
 `;
 
@@ -71,10 +82,10 @@ export default class App extends React.Component<AppProps, AppState> {
         throw Error(response.statusText);
       }
 
-      const json: Todo[] = await response.json();
+      const todoJson: Todo[] = await response.json();
 
       this.setState({
-        todos: [...json, ...this.state.todos],
+        todos: [...todoJson, ...this.state.todos],
         isLoading: false,
       });
     } catch (error) {
@@ -112,11 +123,11 @@ export default class App extends React.Component<AppProps, AppState> {
       }
 
       // Convert the response to json
-      const json: Todo = await response.json();
+      const todoJson: Todo = await response.json();
 
       // Add the new todo item to the top of the todos in state and set isLoading to false to enable all buttons again
       this.setState({
-        todos: [json, ...this.state.todos],
+        todos: [todoJson, ...this.state.todos],
         isLoading: false,
       });
     } catch (error) {
@@ -152,12 +163,12 @@ export default class App extends React.Component<AppProps, AppState> {
       }
 
       // Convert the response to json
-      const json = await response.json();
+      const todoJson = await response.json();
 
       // Map over the state and change the items completed state where the id matches, then set isLoading to false to enable all buttons again
       this.setState({
         todos: this.state.todos.map(todoItem => {
-          if (todoItem.id === json.id) {
+          if (todoItem.id === todoJson.id) {
             return {
               ...todoItem,
               completed: !todoItem.completed,
@@ -295,7 +306,7 @@ export default class App extends React.Component<AppProps, AppState> {
       <TodoContainer>
         <TodoHeader onSubmit={this.addTodo} />
         <ul>{todos.map(this.renderTodoItems)}</ul>
-        <div>Todos left: {this.showTodosLeft()}</div>
+        <div className="todosLeft">Todos left: {this.showTodosLeft()}</div>
         <div className="filterButtons">
           <button onClick={() => this.filterTodos('all')}>All</button>
           <button onClick={() => this.filterTodos('active')}>Active</button>

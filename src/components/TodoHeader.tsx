@@ -13,6 +13,10 @@ const AddTodoFormStyled = styled.form`
   justify-content: center;
   padding: 18px;
   width: 100%;
+
+  @media (max-width: 570px) {
+    width: 90%;
+  }
 `;
 
 const AddTodoInputStyled = styled.input`
@@ -29,6 +33,7 @@ const AddTodoInputStyled = styled.input`
   padding: 0 15px 0 0;
   text-indent: 18px;
   width: 90%;
+
   ::placeholder {
     color: rgba(255, 255, 255, 0.5);
   }
@@ -47,12 +52,12 @@ const AddTodoButtonStyled = styled.button`
   height: 45px;
   justify-content: center;
   outline: none;
-  width: 45px;  
+  width: 45px;
 
   svg {
     fill: white;
   }
-
+  
   &:hover svg {
     fill: #333;
   }
@@ -70,12 +75,9 @@ export default class TodoHeader extends React.Component<
   TodoHeaderProps,
   TodoHeaderState
 > {
-  constructor(props: TodoHeaderProps) {
-    super(props);
-    this.state = {
-      title: '',
-    };
-  }
+  public state: TodoHeaderState = {
+    title: '',
+  };
 
   /** Changing the state on every key stroke */
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

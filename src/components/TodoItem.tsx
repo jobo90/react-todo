@@ -7,8 +7,6 @@ import EditTodoIcon from '../icons/EditTodoIcon';
 import SaveTodoIcon from '../icons/SaveTodoIcon';
 import DeleteTodoIcon from '../icons/DeleteTodoIcon';
 
-import './TodoItem.css';
-
 export interface TodoItemProps {
   /** Set to true when todos are fetched */
   isLoading: boolean;
@@ -35,7 +33,6 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
   box-shadow: 0px 1px 2px rgba(44, 62, 80, 0.1);
   color: #444;
   display: flex;
-  height: 30px;
   justify-content: space-between;
   margin-bottom: 10px;
   padding: 15px 0px 15px 15px;
@@ -51,7 +48,7 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
 
   .buttons {
     border-radius: 0px 5px 5px 0px;
-    display: flex;
+    display: none;
     justify-content: flex-end;
     margin-right: 5px;
     top: 0;
@@ -67,6 +64,10 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
     fill: #444;
     outline: none;
     width: 50px;
+  }
+
+  &:hover .buttons {
+    display: flex;
   }
 
   .completeButton:hover {
@@ -90,15 +91,12 @@ const TodoItemStyled = styled.li<TodoItemStyledProps>`
 export class TodoItem extends React.Component<TodoItemProps, TodoItemState> {
   static defaultProps = {
     className: '',
-  }
+  };
 
-  constructor(props: TodoItemProps) {
-    super(props);
-    this.state = {
-      todoText: props.todo.title,
-      editing: false,
-    };
-  }
+  public state: TodoItemState = {
+    todoText: this.props.todo.title,
+    editing: false,
+  };
 
   /** Toggling the editing state to show the input / hide the label of the todo and vice versa */
   public handleEdit = () => {
