@@ -93,7 +93,6 @@ export default class App extends React.Component<AppProps, AppState> {
 
   /** Toggle a todo item complete in state and on server */
   public toggleComplete = async (todo: Todo) => {
-    console.log('Test')
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
@@ -268,8 +267,6 @@ export default class App extends React.Component<AppProps, AppState> {
     } else if (this.state.todosToShow === 'completed') {
       todos = this.state.todos.filter(todo => todo.completed);
     }
-
-    console.log('$', this.todoAppContext);
 
     return (
       <TodoContext.Provider
