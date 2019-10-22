@@ -234,6 +234,8 @@ export default class App extends React.Component<AppProps, AppState> {
 
   /** Set the state to show the todos by filter (all, active, completed) */
   private filterTodos = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    document.getElementsByClassName(this.state.todosToShow)[0].classList.remove('activeButton');
+    event.currentTarget.classList.add('activeButton');
     this.setState({
       todosToShow: event.currentTarget.value,
     });
@@ -284,13 +286,13 @@ export default class App extends React.Component<AppProps, AppState> {
           <ul>{todos.map(this.renderTodoItems)}</ul>
           <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
           <div className="filterButtons">
-            <button value="all" onClick={this.filterTodos}>
+            <button value="all" className="all activeButton" onClick={this.filterTodos}>
               All
             </button>
-            <button value="active" onClick={this.filterTodos}>
+            <button value="active" className="active" onClick={this.filterTodos}>
               Active
             </button>
-            <button value="completed" onClick={this.filterTodos}>
+            <button value="completed" className="completed" onClick={this.filterTodos}>
               Completed
             </button>
           </div>
