@@ -103,7 +103,7 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
 
   /** Calls the parent toggleComplete component */
   public handleComplete = () => {
-    this.context.onToggleComplete(this.props.todo.id);
+    this.context.onToggleComplete(this.props.todo);
   };
 
   /** Calls the parent toggleDelete component */

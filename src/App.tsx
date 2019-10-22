@@ -236,7 +236,7 @@ export default class App extends React.Component<AppProps, AppState> {
   public todoAppContext: TodoContextProps = {
     onDelete: this.handleDeleteTodo,
     onEdit: this.handleEditTodo,
-    onToggleComplete: this.handleDeleteTodo,
+    onToggleComplete: this.toggleComplete,
   };
 
   /**  */
