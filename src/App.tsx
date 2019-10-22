@@ -1,11 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import { TodoItem } from './components/TodoItem';
 import TodoHeader from './components/TodoHeader';
 import { Todo } from './components/types';
 
-import './App.css';
+import { TodoContainer } from './components/styles';
 
 export interface AppProps {}
 
@@ -16,56 +15,7 @@ interface AppState {
   error: string;
 }
 
-const TodoContainer = styled.div`
-  align-content: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  justify-content: space-between;
-  max-width: 600px;
-  width: 500px;
-
-  > ul {
-    margin: 10px 0 0 0;
-    padding: 0;
-    width: 100%;
-  }
-
-  > .filterButtons button {
-    background: #2596b9;
-    border: 0px;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-    float: left;
-    fill: #444;
-    outline: none;
-    padding: 10px;
-    margin: 5px;
-  }
-
-  > .filterButtons button:hover {
-    color: #333;
-  }
-
-  > .todosLeft {
-    margin: 20px 0;
-  }
-
-  > .errorMessage {
-    color: #d42626;
-  }
-
-  @media (max-width: 570px) {
-    > ul {
-      width: 90%;
-    }
-  }
-`;
-
 interface TodoContextInterface {
-  
   // onDelete(id: string): any;
   // onEdit(newTodoText: string, todoId: string): any;
   // onToggleComplete(todo: Todo): any;
@@ -292,18 +242,14 @@ export default class App extends React.Component<AppProps, AppState> {
   /**  */
   private renderTodoItems = (todo: Todo) => {
     return (
-      <TodoContext.Provider
-        value={this.handleDeleteTodo, this.handleEditTodo, this.handleDeleteTodo}
-      >
-        <TodoItem
-          isLoading={this.state.isLoading}
-          key={todo.id}
-          todo={todo}
-          onDelete={this.handleDeleteTodo}
-          onEdit={this.handleEditTodo}
-          onToggleComplete={this.toggleComplete}
-        />
-      </TodoContext.Provider>
+      <TodoItem
+        isLoading={this.state.isLoading}
+        key={todo.id}
+        todo={todo}
+        onDelete={this.handleDeleteTodo}
+        onEdit={this.handleEditTodo}
+        onToggleComplete={this.toggleComplete}
+      />
     );
   };
 
@@ -326,24 +272,32 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     return (
-      <TodoContainer>
-        <TodoHeader onSubmit={this.addTodo} />
-        <ul>{todos.map(this.renderTodoItems)}</ul>
-        <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
-        <div className="filterButtons">
-          <button value="all" onClick={this.filterTodos}>
-            All
-          </button>
-          <button value="active" onClick={this.filterTodos}>
-            Active
-          </button>
-          <button value="completed" onClick={this.filterTodos}>
-            Completed
-          </button>
-        </div>
-        {this.state.isLoading ? <p>Loading...</p> : null}
-        {this.state.error ? <p className="errorMessage">Error: {this.state.error}</p> : null}
-      </TodoContainer>
+      <TodoContext.Provider
+        value={{
+          first: this.handleDeleteTodo,
+          second: this.handleEditTodo,
+          third: this.handleDeleteTodo,
+        }}
+      >
+        <TodoContainer>
+          <TodoHeader onSubmit={this.addTodo} />
+          <ul>{todos.map(this.renderTodoItems)}</ul>
+          <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
+          <div className="filterButtons">
+            <button value="all" onClick={this.filterTodos}>
+              All
+            </button>
+            <button value="active" onClick={this.filterTodos}>
+              Active
+            </button>
+            <button value="completed" onClick={this.filterTodos}>
+              Completed
+            </button>
+          </div>
+          {this.state.isLoading ? <p>Loading...</p> : null}
+          {this.state.error ? <p className="errorMessage">Error: {this.state.error}</p> : null}
+        </TodoContainer>
+      </TodoContext.Provider>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
 import { Todo } from './types';
 import Button from './Button';
@@ -7,6 +7,8 @@ import CompleteTodoIcon from '../icons/CompleteTodoIcon';
 import EditTodoIcon from '../icons/EditTodoIcon';
 import SaveTodoIcon from '../icons/SaveTodoIcon';
 import DeleteTodoIcon from '../icons/DeleteTodoIcon';
+
+import { TodoItemStyled } from './styles';
 
 export interface TodoItemProps {
   /** Set to true when todos are fetched */
@@ -23,66 +25,9 @@ interface TodoItemState {
   editing: boolean;
 }
 
-interface TodoItemStyledProps {
+export interface TodoItemStyledProps {
   completed: boolean;
 }
-
-const TodoItemStyled = styled.li<TodoItemStyledProps>`
-  align-items: center;
-  background: white;
-  border-radius: 5px;
-  box-shadow: 0px 1px 2px rgba(44, 62, 80, 0.1);
-  color: #444;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  min-height: 30px;
-  padding: 15px 0px 15px 15px;
-  text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
-
-  &.completed {
-    background: #dedede;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .buttons {
-    border-radius: 0px 5px 5px 0px;
-    display: none;
-    justify-content: flex-end;
-    margin-right: 5px;
-    top: 0;
-    width: 150px;
-  }
-
-  .buttons button {
-    background: none;
-    border: 0px;
-    box-shadow: none;
-    cursor: pointer;
-    fill: #444;
-    outline: none;
-    width: 50px;
-  }
-
-  &:hover .buttons {
-    display: flex;
-  }
-
-  .completeButton:hover {
-    fill: #25b951;
-  }
-
-  .editButton:hover {
-    fill: #2596b9;
-  }
-
-  .deleteButton:hover {
-    fill: #cf2620;
-  }
-`;
 
 /**
  * This component represents a todoitem to render them in the todolist
