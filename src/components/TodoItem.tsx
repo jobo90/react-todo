@@ -15,9 +15,6 @@ export interface TodoItemProps {
   /** Set to true when todos are fetched */
   isLoading: boolean;
   todo: Todo;
-  // onDelete: (id: string) => void;
-  // onEdit: (val: string, todoId: string) => void;
-  // onToggleComplete: (todo: Todo) => void;
   className: string;
 }
 
@@ -39,8 +36,8 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
   static defaultProps = {
     className: '',
   };
-  
-  static context = TodoContext;
+
+  static contextType = TodoContext;
   public context!: React.ContextType<typeof TodoContext>;
 
   private todoInput = React.createRef<HTMLInputElement>();
@@ -95,23 +92,23 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
       // Passes the new value to the parent component
 
       this.context.onEdit(this.state.todoText, this.props.todo.id);
-      
     }
   };
-  
+
   /** Gets called when user clicks outside of input */
   public handleOutsideClick = () => {
     this.setState({ editing: false });
     this.handleSubmit();
   };
-  
+
   /** Calls the parent toggleComplete component */
   public handleComplete = () => {
     this.context.onToggleComplete(this.props.todo.id);
-    // this.props.onToggleComplete(this.props.todo);
   };
 
+  /** Calls the parent toggleDelete component */
   public handleDelete = () => {
+    console.log(this.context);
     this.context.onDelete(this.props.todo.id);
   };
 
@@ -139,45 +136,43 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
     const classes = todoItemClassName + ' ' + props.className;
 
     return (
-        <TodoItemStyled completed={props.todo.completed} className={classes}>
-          <label className={labelClassName}>{props.todo.title}</label>
-          <input
-            className={inputClassName}
-            onBlur={this.handleOutsideClick}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyEvent}
-            ref={this.todoInput}
-            value={this.state.todoText}
+      <TodoItemStyled completed={props.todo.completed} className={classes}>
+        <label className={labelClassName}>{props.todo.title}</label>
+        <input
+          className={inputClassName}
+          onBlur={this.handleOutsideClick}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyEvent}
+          ref={this.todoInput}
+          value={this.state.todoText}
+        />
+        <div className="buttons">
+          {this.state.editing ? (
+            ''
+          ) : (
+            <Button
+              className="completeButton"
+              onClick={this.handleComplete}
+              disabled={props.isLoading}
+              icon={CompleteTodoIcon}
+            />
+          )}
+
+          <Button
+            className="editButton"
+            onClick={this.handleEdit}
+            disabled={props.isLoading}
+            icon={this.state.editing ? SaveTodoIcon : EditTodoIcon}
           />
-          <div className="buttons">
-            {this.state.editing ? (
-              ''
-            ) : (
-              <Button
-                className="completeButton"
-                onClick={this.handleComplete}
-                disabled={props.isLoading}
-                icon={CompleteTodoIcon}
-              />
-            )}
-  
-            <Button
-              className="editButton"
-              onClick={this.handleEdit}
-              disabled={props.isLoading}
-              icon={this.state.editing ? SaveTodoIcon : EditTodoIcon}
-            />
-  
-            <Button
-              className="deleteButton"
-              onClick={this.handleDelete}
-              disabled={props.isLoading}
-              icon={DeleteTodoIcon}
-            />
-          </div>
-        </TodoItemStyled>
-      );
+
+          <Button
+            className="deleteButton"
+            onClick={this.handleDelete}
+            disabled={props.isLoading}
+            icon={DeleteTodoIcon}
+          />
+        </div>
+      </TodoItemStyled>
+    );
   }
 }
-
-// TodoItem.contextType = TodoContext
