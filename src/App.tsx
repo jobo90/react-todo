@@ -3,8 +3,8 @@ import React from 'react';
 import { TodoItem } from './components/TodoItem';
 import TodoHeader from './components/TodoHeader';
 import { Todo } from './components/types';
-
 import { TodoContainer } from './components/styles';
+import { TodoContext, TodoContextProps } from './components/TodoContext';
 
 export interface AppProps {}
 
@@ -15,13 +15,7 @@ interface AppState {
   error: string;
 }
 
-interface TodoContextInterface {
-  // onDelete(id: string): any;
-  // onEdit(newTodoText: string, todoId: string): any;
-  // onToggleComplete(todo: Todo): any;
-}
 
-export const TodoContext = React.createContext<TodoContextInterface | null>(null);
 
 const fetchURL = 'https://my-json-server.typicode.com/jobo90/restapi2/todos';
 
@@ -241,6 +235,12 @@ export default class App extends React.Component<AppProps, AppState> {
     });
   };
 
+  public todoAppContext: TodoContextProps = {
+    onDelete: this.handleDeleteTodo,
+    onEdit: this.handleEditTodo,
+    onToggleComplete: this.handleDeleteTodo,
+  };
+
   /**  */
   private renderTodoItems = (todo: Todo) => {
     return (
@@ -248,9 +248,9 @@ export default class App extends React.Component<AppProps, AppState> {
         isLoading={this.state.isLoading}
         key={todo.id}
         todo={todo}
-        onDelete={this.handleDeleteTodo}
-        onEdit={this.handleEditTodo}
-        onToggleComplete={this.toggleComplete}
+        // onDelete={this.handleDeleteTodo}
+        // onEdit={this.handleEditTodo}
+        // onToggleComplete={this.toggleComplete}
       />
     );
   };
@@ -275,11 +275,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     return (
       <TodoContext.Provider
-        value={{
-          first: this.handleDeleteTodo,
-          second: this.handleEditTodo,
-          third: this.handleDeleteTodo,
-        }}
+        value={this.todoAppContext}
       >
         <TodoContainer>
           <TodoHeader onSubmit={this.addTodo} />
