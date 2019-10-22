@@ -108,7 +108,6 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
 
   /** Calls the parent toggleDelete component */
   public handleDelete = () => {
-    console.log(this.context);
     this.context.onDelete(this.props.todo.id);
   };
 
