@@ -37,13 +37,14 @@ export const TodoContainer = styled.div`
   }
 
   > .filterButtons button {
-    background: #82afbd;
+    background: #1c7691;
     border: 0px;
     border-radius: 5px;
-    color: #cfcfcf;
+    color: #fff;
     cursor: pointer;
     float: left;
     fill: #444;
+    opacity: 0.5;
     outline: none;
     padding: 10px;
     margin: 5px;
@@ -52,6 +53,7 @@ export const TodoContainer = styled.div`
   > .filterButtons button:hover {
     background: #1c7691;
     color: #fff;
+    opacity: 1;
   }
 
   > .filterButtons .activeButton:hover {
@@ -61,6 +63,7 @@ export const TodoContainer = styled.div`
   > .filterButtons .activeButton {
     background: #1c7691;
     color: #fff;
+    opacity: 1;
   }
 
   > .todosLeft {
