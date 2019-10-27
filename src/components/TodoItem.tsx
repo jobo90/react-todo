@@ -13,7 +13,7 @@ import { TodoItemStyled } from './styles';
 
 export interface TodoItemProps {
   /** Set to true when todos are fetched */
-  isLoading: boolean;
+  // isLoading: boolean;
   todo: Todo;
   className: string;
 }
@@ -134,6 +134,8 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
 
     const classes = todoItemClassName + ' ' + props.className;
 
+    console.log(`Rendered item ${this.props.todo.id}`)
+
     return (
       <TodoItemStyled completed={props.todo.completed} className={classes}>
         <label className={labelClassName}>{props.todo.title}</label>
@@ -152,7 +154,7 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
             <Button
               className="completeButton"
               onClick={this.handleComplete}
-              disabled={props.isLoading}
+              // disabled={props.isLoading}
               icon={CompleteTodoIcon}
             />
           )}
@@ -160,14 +162,14 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
           <Button
             className="editButton"
             onClick={this.handleEdit}
-            disabled={props.isLoading}
+            // disabled={props.isLoading}
             icon={this.state.editing ? SaveTodoIcon : EditTodoIcon}
           />
 
           <Button
             className="deleteButton"
             onClick={this.handleDelete}
-            disabled={props.isLoading}
+            // disabled={props.isLoading}
             icon={DeleteTodoIcon}
           />
         </div>

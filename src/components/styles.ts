@@ -30,6 +30,20 @@ export const TodoContainer = styled.div`
   max-width: 600px;
   width: 500px;
 
+  .loadingDiv {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+  }
+
+  .loadingDiv:before {
+    content: '';
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+  }
+
   > ul {
     margin: 10px 0 0 0;
     padding: 0;
