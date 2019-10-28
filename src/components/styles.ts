@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
 
 import { TodoItemStyledProps } from './TodoItem';
+import { TodoContainerProps } from '../App';
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700&display=swap');
@@ -20,7 +21,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const TodoContainer = styled.div`
+export const TodoContainer = styled.div<TodoContainerProps>`
   align-content: center;
   align-items: center;
   display: flex;
@@ -32,16 +33,16 @@ export const TodoContainer = styled.div`
 
   .loadingDiv {
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: ${props => (props.width + 'px')};;
+    height: ${props => (props.height + 'px')};;
     z-index: 1;
   }
 
   .loadingDiv:before {
     content: '';
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: ${props => (props.width + 'px')};;
+    height: ${props => (props.height + 'px')};;
   }
 
   > ul {
@@ -51,7 +52,7 @@ export const TodoContainer = styled.div`
   }
 
   > .filterButtons button {
-    background: #1c7691;
+    background: #2596b9;
     border: 0px;
     border-radius: 5px;
     color: #fff;
@@ -65,7 +66,7 @@ export const TodoContainer = styled.div`
   }
 
   > .filterButtons button:hover {
-    background: #1c7691;
+    background: #2596b9;
     color: #fff;
     opacity: 1;
   }
@@ -75,7 +76,7 @@ export const TodoContainer = styled.div`
   }
 
   > .filterButtons .activeButton {
-    background: #1c7691;
+    background: #2596b9;
     color: #fff;
     opacity: 1;
   }

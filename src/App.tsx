@@ -13,6 +13,13 @@ interface AppState {
   todosToShow: string;
   isLoading: boolean;
   error: string;
+  todoListWidth: number;
+  todoListHeight: number;
+}
+
+export interface TodoContainerProps {
+  width: number;
+  height: number;
 }
 
 const fetchURL = 'https://my-json-server.typicode.com/jobo90/restapi2/todos';
@@ -22,15 +29,19 @@ export default class App extends React.Component<AppProps, AppState> {
     todos: [],
     todosToShow: 'all',
     isLoading: false,
-    error: ''
+    error: '',
+    todoListWidth: 0,
+    todoListHeight: 0,
   };
+
+  private myDivRef = React.createRef<HTMLDivElement>();
 
   /** Fetching todos from API */
   public async componentDidMount() {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
-      error: ''
+      error: '',
     });
 
     try {
@@ -43,8 +54,10 @@ export default class App extends React.Component<AppProps, AppState> {
 
         this.setState({
           todos: [...todoJson, ...this.state.todos],
-          isLoading: false
+          isLoading: false,
         });
+
+        this.calculateTodoListSize();
       }
     } catch (error) {
       this.displayError(error);
@@ -56,7 +69,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
-      error: ''
+      error: '',
     });
 
     // Sending POST request to server to add the todo item
@@ -66,11 +79,11 @@ export default class App extends React.Component<AppProps, AppState> {
         body: JSON.stringify({
           id: todo.id,
           title: todo.title,
-          completed: todo.completed
+          completed: todo.completed,
         }),
         headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
+          'Content-type': 'application/json; charset=UTF-8',
+        },
       });
 
       // Throw an error if response is not in range between 200-299
@@ -83,8 +96,10 @@ export default class App extends React.Component<AppProps, AppState> {
         // Add the new todo item to the top of the todos in state and set isLoading to false to enable all buttons again
         this.setState({
           todos: [todoJson, ...this.state.todos],
-          isLoading: false
+          isLoading: false,
         });
+
+        this.calculateTodoListSize();
       }
     } catch (error) {
       this.displayError(error);
@@ -96,7 +111,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
-      error: ''
+      error: '',
     });
 
     // Sending PATCH request to server to change the completed status of the item
@@ -104,11 +119,11 @@ export default class App extends React.Component<AppProps, AppState> {
       const response: Response = await fetch(`${fetchURL}/${todo.id}`, {
         method: 'PATCH',
         body: JSON.stringify({
-          completed: !todo.completed
+          completed: !todo.completed,
         }),
         headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
+          'Content-type': 'application/json; charset=UTF-8',
+        },
       });
 
       // Throw an error if response is not in range between 200-299
@@ -124,13 +139,13 @@ export default class App extends React.Component<AppProps, AppState> {
             if (todoItem.id === todoJson.id) {
               return {
                 ...todoItem,
-                completed: !todoItem.completed
+                completed: !todoItem.completed,
               };
             } else {
               return todoItem;
             }
           }),
-          isLoading: false
+          isLoading: false,
         });
       }
     } catch (error) {
@@ -143,13 +158,13 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
-      error: ''
+      error: '',
     });
 
     // Sending DELETE request to server to remove the selected todo item
     try {
       const response: Response = await fetch(`${fetchURL}/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
 
       // Throw an error if response is not in range between 200-299
@@ -159,8 +174,10 @@ export default class App extends React.Component<AppProps, AppState> {
         // Filter the todos in state to remove the selected todo item, then set isLoading to false to enable all buttons again
         this.setState({
           todos: this.state.todos.filter(todo => todo.id !== id),
-          isLoading: false
+          isLoading: false,
         });
+        
+        this.calculateTodoListSize();
       }
     } catch (error) {
       this.displayError(error);
@@ -172,7 +189,7 @@ export default class App extends React.Component<AppProps, AppState> {
     // Setting isLoading to true which disables the Complete, Edit and Delete buttons in the TodoItem component
     this.setState({
       isLoading: true,
-      error: ''
+      error: '',
     });
 
     // Sending PATCH request to server to change the title of the item
@@ -180,11 +197,11 @@ export default class App extends React.Component<AppProps, AppState> {
       const response = await fetch(`${fetchURL}/${todoId}`, {
         method: 'PATCH',
         body: JSON.stringify({
-          title: newTodoText
+          title: newTodoText,
         }),
         headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
+          'Content-type': 'application/json; charset=UTF-8',
+        },
       });
 
       // Throw an error if response is not in range between 200-299
@@ -195,7 +212,7 @@ export default class App extends React.Component<AppProps, AppState> {
           if (todoItem.id === todoId) {
             return {
               ...todoItem,
-              title: newTodoText
+              title: newTodoText,
             };
           } else {
             return todoItem;
@@ -205,7 +222,7 @@ export default class App extends React.Component<AppProps, AppState> {
         // Map over the state and change the items title where the id matches, then set isLoading to false to enable all buttons again
         this.setState({
           todos,
-          isLoading: false
+          isLoading: false,
         });
       }
     } catch (error) {
@@ -216,7 +233,7 @@ export default class App extends React.Component<AppProps, AppState> {
   public displayError = (error?: Error) => {
     this.setState({
       isLoading: false,
-      error: 'Something went wrong, please refresh the page or try again.'
+      error: 'Something went wrong, please refresh the page or try again.',
     });
 
     if (error) {
@@ -225,22 +242,29 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   /** Set the state to show the todos by filter (all, active, completed) */
-  private filterTodos = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    document
-      .getElementsByClassName(this.state.todosToShow)[0]
-      .classList.remove('activeButton');
+  private filterTodos = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    document.getElementsByClassName(this.state.todosToShow)[0].classList.remove('activeButton');
     event.currentTarget.classList.add('activeButton');
     this.setState({
-      todosToShow: event.currentTarget.value
+      todosToShow: event.currentTarget.value,
     });
   };
 
   public todoAppContext: TodoContextProps = {
     onDelete: this.handleDeleteTodo,
     onEdit: this.handleEditTodo,
-    onToggleComplete: this.toggleComplete
+    onToggleComplete: this.toggleComplete,
+  };
+
+  public calculateTodoListSize = () => {
+    const node = this.myDivRef.current;
+
+    if (node) {
+      this.setState({
+        todoListWidth: node.clientWidth,
+        todoListHeight: node.clientHeight,
+      });
+    }
   };
 
   /**  */
@@ -259,6 +283,12 @@ export default class App extends React.Component<AppProps, AppState> {
     return this.state.todos.filter(todo => !todo.completed).length;
   };
 
+  // refCallback = (element: any) => {
+  //   if (element) {
+  //     console.log(element.getBoundingClientRect())
+  //   }
+  // };
+
   public render() {
     // Create an empty array of todos
     let todos: Array<Todo> = [];
@@ -274,62 +304,24 @@ export default class App extends React.Component<AppProps, AppState> {
 
     return (
       <TodoContext.Provider value={this.todoAppContext}>
-        <TodoContainer>
+        <TodoContainer ref={this.myDivRef} width={this.state.todoListWidth} height={this.state.todoListHeight}>
           {this.state.isLoading ? <div className="loadingDiv"></div> : ''}
           <TodoHeader onSubmit={this.addTodo} />
           <ul>{todos.map(this.renderTodoItems)}</ul>
-          {/* <ul>
-          <TodoItem
-            // isLoading={this.state.isLoading}
-            key={1}
-            todo={this.state.todos[0]}
-          />
-          <TodoItem
-            // isLoading={this.state.isLoading}
-            key={2}
-            todo={this.state.todos[1]}
-          />
-          <TodoItem
-            // isLoading={this.state.isLoading}
-            key={3}
-            todo={this.state.todos[2]}
-          />
-          <TodoItem
-            // isLoading={this.state.isLoading}
-            key={4}
-            todo={this.state.todos[3]}
-          />
-          </ul> */}
-          <div className="todosLeft">
-            Todos left: {this.getIncompleteTodosLen()}
-          </div>
+          <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
           <div className="filterButtons">
-            <button
-              value="all"
-              className="all activeButton"
-              onClick={this.filterTodos}
-            >
+            <button value="all" className="all activeButton" onClick={this.filterTodos}>
               All
             </button>
-            <button
-              value="active"
-              className="active"
-              onClick={this.filterTodos}
-            >
+            <button value="active" className="active" onClick={this.filterTodos}>
               Active
             </button>
-            <button
-              value="completed"
-              className="completed"
-              onClick={this.filterTodos}
-            >
+            <button value="completed" className="completed" onClick={this.filterTodos}>
               Completed
             </button>
           </div>
           {this.state.isLoading ? <p>Loading...</p> : null}
-          {this.state.error ? (
-            <p className="errorMessage">Error: {this.state.error}</p>
-          ) : null}
+          {this.state.error ? <p className="errorMessage">Error: {this.state.error}</p> : null}
         </TodoContainer>
       </TodoContext.Provider>
     );

@@ -134,8 +134,6 @@ export class TodoItem extends React.PureComponent<TodoItemProps, TodoItemState> 
 
     const classes = todoItemClassName + ' ' + props.className;
 
-    console.log(`Rendered item ${this.props.todo.id}`)
-
     return (
       <TodoItemStyled completed={props.todo.completed} className={classes}>
         <label className={labelClassName}>{props.todo.title}</label>
