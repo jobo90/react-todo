@@ -2,7 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
 
 import { TodoItemStyledProps } from './TodoItem';
-import { TodoContainerProps } from '../App';
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700&display=swap');
@@ -21,7 +20,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const TodoContainer = styled.div<TodoContainerProps>`
+export const TodoContainer = styled.div`
   align-content: center;
   align-items: center;
   display: flex;
@@ -29,20 +28,13 @@ export const TodoContainer = styled.div<TodoContainerProps>`
   height: auto;
   justify-content: space-between;
   max-width: 600px;
+  position: relative;
   width: 500px;
 
   .loadingDiv {
-    position: fixed;
-    width: ${props => (props.width + 'px')};;
-    height: ${props => (props.height + 'px')};;
-    z-index: 1;
-  }
-
-  .loadingDiv:before {
-    content: '';
-    position: fixed;
-    width: ${props => (props.width + 'px')};;
-    height: ${props => (props.height + 'px')};;
+    position: absolute;
+    height: 100%;
+    width: 100%;
   }
 
   > ul {

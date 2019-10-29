@@ -17,11 +17,6 @@ interface AppState {
   todoListHeight: number;
 }
 
-export interface TodoContainerProps {
-  width: number;
-  height: number;
-}
-
 const fetchURL = 'https://my-json-server.typicode.com/jobo90/restapi2/todos';
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -283,12 +278,6 @@ export default class App extends React.Component<AppProps, AppState> {
     return this.state.todos.filter(todo => !todo.completed).length;
   };
 
-  // refCallback = (element: any) => {
-  //   if (element) {
-  //     console.log(element.getBoundingClientRect())
-  //   }
-  // };
-
   public render() {
     // Create an empty array of todos
     let todos: Array<Todo> = [];
@@ -304,8 +293,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     return (
       <TodoContext.Provider value={this.todoAppContext}>
-        <TodoContainer ref={this.myDivRef} width={this.state.todoListWidth} height={this.state.todoListHeight}>
-          {this.state.isLoading ? <div className="loadingDiv"></div> : ''}
+        <TodoContainer>
           <TodoHeader onSubmit={this.addTodo} />
           <ul>{todos.map(this.renderTodoItems)}</ul>
           <div className="todosLeft">Todos left: {this.getIncompleteTodosLen()}</div>
@@ -322,6 +310,7 @@ export default class App extends React.Component<AppProps, AppState> {
           </div>
           {this.state.isLoading ? <p>Loading...</p> : null}
           {this.state.error ? <p className="errorMessage">Error: {this.state.error}</p> : null}
+          {this.state.isLoading ? <div className="loadingDiv"></div> : ''}
         </TodoContainer>
       </TodoContext.Provider>
     );
